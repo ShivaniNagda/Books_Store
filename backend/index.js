@@ -1,0 +1,49 @@
+
+import dotenv from 'dotenv';
+dotenv.config();
+import express from "express";
+import authRoutes from  "./routes/auth.route.js";
+import cookieParser from "cookie-parser";
+import cors from "cors";
+import path from "path";
+import bookRoutes from './routes/book.route.js';
+import { verifyToken } from './middleware/verifyToken.js';
+import { checkAuth } from './controllers/auth.controller.js';
+
+
+
+const app = express();
+const _dirname = path.resolve();
+console.log("_dirname ",_dirname);
+console.log("process.env.NODE_ENV ",process.env.NODE_ENV);
+
+// app.use(cors({
+//     origin: "http://localhost:5173",
+//     credentials: true,
+// }));
+app.use(
+  cors({
+    origin: "http://localhost:5173" , // OR 3001 / your frontend port
+    credentials: true,
+  })
+);
+app.options("*", cors());
+
+app.use(cookieParser());
+
+app.use(express.json());
+
+app.use("/api/auth",authRoutes);
+// app.use(verifyToken,checkAuth);
+
+app.use("/api/books",bookRoutes);
+
+
+// if(process.env.NODE_ENV === "production"){
+//     app.use(express.static(path.join(_dirname,"/frontendClient/dist")));
+//     app.get("*",(req,res) => {
+//         res.sendFile(path.resolve(_dirname,"frontendClient","dist","index.html"));
+//     })
+// }
+
+ export default app;
