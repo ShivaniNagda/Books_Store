@@ -36,7 +36,7 @@ app.use(express.json());
 app.use("/api/auth",authRoutes);
 // app.use(verifyToken,checkAuth);
 
-app.use("/api/books",bookRoutes);
+app.use("/api/book",bookRoutes);
 
 
 // if(process.env.NODE_ENV === "production"){

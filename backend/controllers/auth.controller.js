@@ -40,7 +40,7 @@ export const signup = async (req, res) => {
    await generateTokenAndSetCookie(res,userData._id);
    const sendVerificationEmailoutput = await sendVerificationEmail(userData.email,verificationToken);
    console.log("sendVerificationEmailoutput ",sendVerificationEmailoutput);
-   return res.status(201).json({success:true,message:"User created Successfully",user:{...userData._doc,password:undefined}});
+   return res.status(201).json({success:true,message:"User created Successfully",userData:{...userData._doc,password:undefined}});
   } catch (error) {
     console.error("error",error);
    return res.status(500).send({ message: "Error creating user" });
@@ -55,15 +55,13 @@ export const verifyEmail = async(req,res)=>{
     const userdata = await user.findOne({verificationToken:code});
     console.log(user);
     console.log(userdata);
-    if(!userdata){
-      return res.status(400).json({success:false,message:"Invalid verification code"})
-    }
+  //   
     userdata.isVerified = true;
     userdata.verificationToken=undefined;
     userdata.verificationExpireAt=undefined;
     await userdata.save();
     await sendWelcomeEmail(userdata.email,userdata.name);
-    res.status(200).json({success:true,message:"Email verified successfully",user:{...userdata._doc, password:undefined}});
+    res.status(200).json({success:true,message:"Email verified successfully",userData:{...userdata._doc, password:undefined}});
   }catch(err){
     console.error(err);
     res.status(500).send({ message: "Error verify Email" });
@@ -85,7 +83,7 @@ export const login = async (req, res) => {
     generateTokenAndSetCookie(res,userdata._id);
     userdata.lastLogin = new Date();
     await userdata.save();
-    res.status(200).json({success:true,message:"Logged in successfully",user:{...userdata._doc,password:undefined,},});
+    res.status(200).json({success:true,message:"Logged in successfully",userData:{...userdata._doc,password:undefined,},});
   } catch (error) {
     console.error("Erro in login function : " ,error);
     res.status(400).send({ message: "Error creating user" });
@@ -165,7 +163,7 @@ export const checkAuth = async(req,res)=>{
     if(!userdata){
       return res.status(400).json({success:false,message:"User not found"});
     }
-    res.status(200).json({success:true,userdata});
+    res.status(200).json({success:true,userData:userdata});
   }catch(err){
     console.log("Error in checkAuth ",err);
     res.status(400).json({success:false,message:err.message});
