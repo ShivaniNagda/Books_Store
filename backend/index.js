@@ -19,7 +19,7 @@ console.log("process.env.NODE_ENV ",process.env.NODE_ENV);
 
 app.use(
   cors({
-    origin: "http://localhost:5173" ||  "http://localhost:3000" , // OR 3001 / your frontend port
+    origin: process.env.CLIENT_URL || "http://localhost:5173" ||  "http://localhost:3000" , // OR 3001 / your frontend port
     credentials: true,
   })
 );
