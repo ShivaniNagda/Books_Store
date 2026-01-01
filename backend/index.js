@@ -17,10 +17,6 @@ const _dirname = path.resolve();
 console.log("_dirname ",_dirname);
 console.log("process.env.NODE_ENV ",process.env.NODE_ENV);
 
-// app.use(cors({
-//     origin: "http://localhost:5173",
-//     credentials: true,
-// }));
 app.use(
   cors({
     origin: "http://localhost:5173" ||  "http://localhost:3000" , // OR 3001 / your frontend port
@@ -40,11 +36,11 @@ app.use("/api/auth",authRoutes);
 app.use("/api/book",bookRoutes);
 
 
-// if(process.env.NODE_ENV === "production"){
-//     app.use(express.static(path.join(_dirname,"/frontendClient/dist")));
-//     app.get("*",(req,res) => {
-//         res.sendFile(path.resolve(_dirname,"frontendClient","dist","index.html"));
-//     })
-// }
+if(process.env.NODE_ENV === "production"){
+    app.use(express.static(path.join(_dirname,"/frontend/dist")));
+    app.get("*",(req,res) => {
+        res.sendFile(path.resolve(_dirname,"frontend","dist","index.html"));
+    })
+}
 
  export default app;

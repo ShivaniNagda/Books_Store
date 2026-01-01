@@ -33,6 +33,7 @@
     "nodemailer": "^6.10.0"
   },
   "devDependencies": {
+    "@vitejs/plugin-react": "^5.1.2",
     "nodemon": "^3.1.9"
   }
 }
