@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import { PlusCircle, Upload, Loader } from 'lucide-react';
 import React, { useState } from 'react'
 import { useBookStore } from '../store/bookStore';
+import toast from 'react-hot-toast';
 
 
 
@@ -22,9 +23,11 @@ const CreateBookForm = () => {
     console.log("Submitting new book:", newBook);
   try{
     await createBook(newBook);
+    toast.success(`Hi ${name} Added Successfully.`)
     setNewBook({name:"",price:"",description:"",inStock:"",genre:"",image:"",pdf:""})
   }catch(error){
     console.log(error);
+    toast.error("Something went wrong please try again");
   }
   }
   const handleImageChange = (e) =>{
