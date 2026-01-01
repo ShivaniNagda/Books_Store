@@ -17,13 +17,8 @@ const _dirname = path.resolve();
 console.log("_dirname ",_dirname);
 console.log("process.env.NODE_ENV ",process.env.NODE_ENV);
 
-app.use(
-  cors({
-    origin:"*" ,// OR 3001 / your frontend port
-    credentials: true,
-  })
-);
-app.options("*", cors());
+app.use(cors({origin:"https://readify-2tfq.onrender.com" ,credentials: true}));
+// app.options("*", cors());
 
 app.use(cookieParser());
 
