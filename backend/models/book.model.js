@@ -18,6 +18,7 @@ const bookSchema=new mongoose.Schema({
         ref:"Review"
     }],
     image:String,
+    pdf:String,
     authorId:{
         type:mongoose.Schema.Types.ObjectId,
         ref:"user"

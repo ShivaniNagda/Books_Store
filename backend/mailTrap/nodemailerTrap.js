@@ -11,21 +11,8 @@ import { transporter } from "./mailTrap.config.js";
 export const sendVerificationEmail = async (email, verificationToken) => {
   console.log("SendVerificationEmail..Signup",email);
     const recipient = email;
-//  const transport = Nodemailer.createTransport(
-//   MailtrapTransport({
-//     token: TOKEN,
-//   })
-// );
-// const recipients = [
-//     "shivaninagda1997@gmail.com",
-//   ];
-  
-//  const sender = {
-//   address: "hello@demomailtrap.co",
-//   name: "Mailtrap Test",
-// };
 try{
-transporter
+const message = await transporter
   .sendMail({
     from: process.env.MYEMAIL,
     to: recipient,
@@ -34,9 +21,13 @@ transporter
     html:VERIFICATION_EMAIL_TEMPLATE.replace(`{verificationCode}`,verificationToken),
     category: "Integration Test",
   })
+  console.log(message)
+  return true;
 }catch(err){
   console.log("Error sending email");
   console.log(err.message);
-  throw new Error(`Error sending email : ${err}`);
+  // throw new Error(`Error sending email : ${err}`);
+  return false;
+  // return res.status(500).json({success:false,message:"Error sending verification email"});
 }
 }

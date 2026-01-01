@@ -2,50 +2,105 @@ import mongoose from "mongoose";
 import BookModel from "../models/book.model.js";
 import ReviewModel from "../models/review.model.js"
 import { user } from "../models/user.model.js";
-import { v2 as cloudinary } from 'cloudinary';
+import cloudinary from "../utils/cloudinary.js";
 
 
 
-export const createBook = async (req, res) => {
-    try {
-        const { name, price, genre, description, inStock,image } = req.body;
-        const author = req.userId;
+// export const createBook = async (req, res) => {
+//     try {
+//         const { name, price, genre, description, inStock,image,pdf } = req.body.name;
+//         const author = req.userId;
+//         console.log("createBook req.body ",req.body);
+//         if(!name || !price || !genre || !description  || !image){
+//             return res.status(400).json({success:false,message:"All fields are required"});
+//         }
+//         let cloudniaryResponseimage=null;
+//         let cloudniaryResponsepdf=null;
+//         try{
+//             cloudniaryResponseimage = await cloudinary.uploader.upload(image,{
+//                 folder:"book_store_app"
+//             });
+//         }catch(error){
+//             console.error("Error in uploading image to cloudinary: ",error);
+//             return res.status(500).json({success:false,message:"Error in uploading image"});
+//         }
+//         try{
+//             cloudinary.uploader.upload(pdf, {
+//   resource_type: "raw",
+//   folder: "book_store_app/pdfs"
+// });
 
-        if(!name || !price || !genre || !description || !inStock || !image){
-            return res.status(400).json({success:false,message:"All fields are required"});
-        }
-        let cloudniaryResponse=null;
-        try{
-            cloudniaryResponse = await cloudinary.uploader.upload(image,{
-                folder:"book_store_app"
-            });
-        }catch(error){
-            console.error("Error in uploading image to cloudinary: ",error);
-            return res.status(500).json({success:false,message:"Error in uploading image"});
-        }
+//         }catch(error){
+//             console.error("Error in uploading pdf to cloudinary: ",error);
+//             return res.status(500).json({success:false,message:"Error in uploading pdf"});
+//         }
 
-        const newBook = new BookModel({
-            name,
-            price,
-            genre,
-            description,
-            inStock,
-            image:cloudniaryResponse.secure_url ? cloudniaryResponse.secure_url : "",
-            authorId:new mongoose.Types.ObjectId(author)
+//         const newBook = new BookModel({
+//             name,
+//             price,
+//             genre,
+//             description,
+//             inStock,
+//             image:cloudniaryResponseimage.secure_url ? cloudniaryResponseimage.secure_url : "",
+//             pdf:cloudniaryResponsepdf.secure_url ? cloudniaryResponsepdf.secure_url : "",
+//             authorId:new mongoose.Types.ObjectId(author)
 
-        });
+//         });
         
-        console.log("newBook ",newBook);
-        await newBook.save();
+//         console.log("newBook ",newBook);
+//         await newBook.save();
 
-        return res.status(201).json({ success: true, message: "Book created successfully", book: newBook });
-    } catch (error) {
-        if(error instanceof mongoose.Error.ValidationError){
-            return res.status(400).json({success:false,message:error.message});
-        }
-        console.error("Error in creating book: ", error);
-        return res.status(500).json({ success: false, message: "Internal server error" });
+//         return res.status(201).json({ success: true, message: "Book created successfully", book: newBook });
+//     } catch (error) {
+//         if(error instanceof mongoose.Error.ValidationError){
+//             return res.status(400).json({success:false,message:error.message});
+//         }
+//         console.error("Error in creating book: ", error);
+//         return res.status(500).json({ success: false, message: "Internal server error" });
+//     }
+// };
+export const createBook = async (req, res) => {
+  try {
+    const { name, price, genre, description, inStock } = req.body;
+    const authorId = req.userId;
+    console.log("FILES:", req.files);
+    console.log("BODY:", req.body);
+
+    if (!req.files || !req.files.image || !req.files.pdf) {
+      return res.status(400).json({
+        success: false,
+        message: "Image and PDF are required",
+      });
     }
+
+    const imagePath = req.files.image[0].path;
+    const pdfPath = req.files.pdf[0].path;
+
+    const imageUpload = await cloudinary.uploader.upload(imagePath, {
+      folder: "book_store_app/images",
+    });
+
+    const pdfUpload = await cloudinary.uploader.upload(pdfPath, {
+      resource_type: "raw",
+      folder: "book_store_app/pdfs",
+    });
+
+    const book = await BookModel.create({
+      name,
+      price,
+      genre,
+      description,
+      inStock,
+      image: imageUpload.secure_url,
+      pdf: pdfUpload.secure_url,
+      authorId: new mongoose.Types.ObjectId(authorId),
+    });
+
+    res.status(201).json({ success: true, book });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: "Upload failed" });
+  }
 };
 
 export const getBooks = async (req, res) => {
@@ -149,11 +204,13 @@ export const deleteBook = async (req, res) => {
     try {
         const { id } = req.params;
         const authorId = req.userId;
-         const user = await user.findById(authorId).select("type");
-        if(!user){
+        console.log("deleteBook authorId,id ",authorId,id);
+         const isUser = await user.findById(authorId).select("type");
+        if(!isUser){
             return res.status(404).json({ success: false, message: "User not found" });
         }
-        if(user.type !== "Seller" || user.type !== "Admin"){
+        console.log("isUser.type ",isUser.type);
+        if(isUser.type == "Customer"){
             return res.status(403).json({ success: false, message: "Only sellers or admin can delete books" });
         }
         
@@ -161,6 +218,7 @@ export const deleteBook = async (req, res) => {
         if (!deletedBook) {
             return res.status(404).json({ success: false, message: "Book not found" });
         }
+        console.log("deletedBook ",deletedBook);
         return res.status(200).json({ success: true, message: "Book deleted successfully" });
     }
     catch (error) {

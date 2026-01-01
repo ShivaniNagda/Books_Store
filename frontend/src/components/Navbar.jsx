@@ -1,80 +1,100 @@
-import React from 'react'
-import {motion} from 'framer-motion'
-import { userAuthStore } from '../store/authStore';
-import { useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { LogOut , UserPen } from 'lucide-react';
+import React from "react";
+import { motion } from "framer-motion";
+import { userAuthStore } from "../store/authStore";
+import { Link, useNavigate } from "react-router-dom";
+import { LogOut, UserPen, FilePenLine,CircleUser  } from "lucide-react";
 
-const Navbar = ({mainheading,goBack}) => {
-    //  const { user } = userAuthStore((state) => ({ user: state.user }));
-      // const {isCheckingAuth,checkAuth} = userAuthStore();
-   const user = userAuthStore((state) => state.user);
-   const logout = userAuthStore((state) => state.logout);
-   const navigate= useNavigate();
+const Navbar = ({ mainheading, goBack }) => {
+  const { user, logout } = userAuthStore();
 
-   console.log("Navbar userAuthStore user:",user);
-    if (!user || !logout) return null;
-        const handleLogout = () => {
-            // Implement logout functionality here
-            logout();
-             navigate("/login");
-            }
-        const handleProfile = () => {
-            // Implement profile navigation here
-            console.log("Navigate to profile");
-            
-            navigate("/profile");
-            console.log("Navigate to profile");
-        }
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
+
+  if (!user) return null;
+
   return (
-    <div>
-          <motion.div 
-    initial={{opacity:0, scale:0.9}}
-    animate={{opacity:1 , scale:1}}
-    exit={{opacity:0, scale:0.9}}
-    transition={{duration:0.5}}
-    className='gap-10 p-5  items-center align-middle justify-between w-full flex  mx-auto backdrop-filter backdrop-blur-lg rounded-xl shadow-2xl '>
-        <h1 className="text-3xl font-bold mb-6 text-center bg-gradient-to-r from-slate-50 to-slate-600 text-transparent bg-clip-text ">{mainheading}</h1>
+    <motion.div
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.4 }}
+      className="
+        w-full
+        flex
+        flex-col
+        sm:flex-row
+        justify-between
+        items-center
+        gap-4
+        p-4
+        backdrop-blur-lg
+        rounded-xl
+        shadow-2xl
+      "
+    >
+      {/* HEADING */}
+      <h1 className="
+        text-xl
+        sm:text-2xl
+        md:text-3xl
+        font-bold
+        text-center
+        bg-gradient-to-r
+        from-slate-50
+        to-slate-600
+        text-transparent
+        bg-clip-text
+        bg-gradient-to-r from-yellow-200 to-yellow-600
+      ">
+        {user.type} {mainheading}
+      </h1>
+
+      {/* ACTION BUTTONS */}
+      <div className="flex gap-3 ">
        
-       <div className='flex gap-4 items-center'>
-         <motion.div 
-        initial={{opacity:0, y:20}}
-        animate={{opacity:1, y:0}}
-        transition={{duration:0.2}}
-        className='bg-gray-800 bg-opacity-50 p-2 overflow-hidden rounded-lg border border-gray-
-        700'>
-            <motion.button 
-            whileHover={{scale:1.05}}
-            whileTap={{scale:0.95}}
-            onClick={handleLogout}
-            className='w-full bg-gradient-to-r p-2 from-slate-500 to-slate-600  text-white font-bold py-
-            2 rounded-shadow-lg hover:from-slate-600 hover:to-slate-700 focus:outline-none focus:ring-2 px-4  focus:ring-offset-2 focus:ring-offset-gray-900'><LogOut color="#ffffff" /></motion.button>
 
-        </motion.div>
-      
-        <motion.div 
-        initial={{opacity:0, y:20}}
-        animate={{opacity:1, y:0}}
-        transition={{duration:0.2}}
-        className='bg-gray-800 bg-opacity-50 p-2 overflow-hidden rounded-lg border border-gray-
-        700'>
-            <Link to={goBack}>
-            <motion.button 
-            whileHover={{scale:1.05}}
-            whileTap={{scale:0.95}}
-            // onClick={handleProfile}
-            className='w-full bg-gradient-to-r p-2 from-slate-500 to-slate-600  text-white font-bold py-
-            2 rounded-shadow-lg hover:from-slate-600 hover:to-slate-700 focus:outline-none focus:ring-2 px-4  focus:ring-offset-2 focus:ring-offset-gray-900'><UserPen color="#ffffff" />
-            
-            </motion.button>
-            </Link>
-
-        </motion.div>
-          </div>
+        {/* PROFILE / BACK */}
+        <Link to={goBack}>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="
+              flex items-center justify-center
+             bg-gradient-to-r from-yellow-200 to-yellow-600
+              hover:from-slate-600 hover:to-slate-700
+              text-white
+              p-2
+              rounded-lg
+              border border-gray-700
+            "
+          >
+            <CircleUser   size={20} />
+          </motion.button>
+        </Link>
+         {/* LOGOUT */}
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={handleLogout}
+          className="
+            flex items-center justify-center
+           
+            hover:from-slate-600 hover:to-slate-700
+            bg-gradient-to-r from-yellow-200 to-yellow-600
+            text-white
+            p-2
+            rounded-lg
+            border border-gray-700
+          "
+        >
+          <LogOut size={20} />
+        </motion.button>
+      </div>
     </motion.div>
-     
-    </div>
-  )
-}
+  );
+};
 
 export default Navbar;

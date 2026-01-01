@@ -2,13 +2,16 @@
 import express from "express";
 import { verifyToken } from "../middleware/verifyToken.js";
 import { createBook, getBooks, getBookById, updateBook, deleteBook,rate, getBookByAuthorId, getBooksByGenre } from "../controllers/book.controller.js";
-
+import upload from "../middleware/multer.js"
 
 
 const bookRoutes = express.Router();
 
 bookRoutes.get("/",verifyToken,getBooks);
-bookRoutes.post("/",verifyToken,createBook);
+bookRoutes.post("/",verifyToken,upload.fields([
+    { name: "image", maxCount: 1 },
+    { name: "pdf", maxCount: 1 },
+  ]), createBook);
 bookRoutes.get("/:id",verifyToken,getBookById);
 bookRoutes.get("/author/:id",verifyToken,getBookByAuthorId);
 bookRoutes.get("/genre/:genre",verifyToken,getBooksByGenre);

@@ -4,16 +4,26 @@ import { Mail, User,Lock, Loader } from "lucide-react";
 import Input from "../components/input";
 import { Link } from "react-router-dom";
 import { userAuthStore } from "../store/authStore";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-hot-toast";
 
 const LogInPage = () => {
  
   const [email ,setEmail ] = useState('');
   const [password ,setPassword ] = useState('');
   const {login,isLoading,error} = userAuthStore();
+  const navigate = useNavigate();
 
     const handleLogin = async(e) =>{
         e.preventDefault();
-        await login(email,password);
+       const message= await login(email,password);
+       console.log("Login message :",message);
+       if(error){
+        toast.error(error);
+        return;
+       }
+        navigate("/");
+        toast.success("Logged in successfully");
     }
   return (
     <div className="flex items-center

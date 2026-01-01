@@ -17,7 +17,8 @@ export const sendVerificationEmail = async (email, verificationToken) => {
     console.log("Email send successfully");
   } catch (err) {
     console.error(`Error Sending verification`,err);
-    throw new Error(`Error sending verification email: ${err}`);
+    // throw new Error(`Error sending verification email: ${err}`);
+    return res.status(500).json({success:false,message:"Error sending verification email"});
   }
 };
 
@@ -32,17 +33,14 @@ export const sendWelcomeEmail= async(email,name)=>{
       subject: "Welcome you have signup successfully",
       html: `welcome ${name ? name : "dear"}, you have signup successfully`,
       category: "Welcome",
-      // template_uuid: "017bf43d-8abf-48b5-b20b-6e48b8214a57",
-      // template_variables: {
-      //   company_info_name: "The Code Path",
-      //   name: name
-      // }
+     
     })
     console.log("Welcome email sent successfully");
   }catch(err){
     
     console.log( "Error sending welcome email");
     console.log(err);
+    // return res.status(500).json({success:false,message:"Error sending Welcome Email"});
     // throw new Error(`Error sending Welcome Email : ${err}`)
   }
 }
@@ -64,7 +62,8 @@ export const sendPasswordResetEmail = async(email,resetURL) =>{
       // res.status(200).json({success:true,message:"Password reset link sent to your email"});
       } catch (err) {
         console.error("Error sending password reset email", err);
-        throw new Error(`Error sending password reset email: ${err}`);
+        // throw new Error(`Error sending password reset email: ${err}`);
+        return res.status(500).json({success:false,message:"Error sending password reset email"});
         }
         
 }
@@ -84,6 +83,7 @@ export const sendResetSuccessEmail = async(email)=>{
 }catch(err){
   console.log("Error sending password reset success email");
   console.log(err);
-  throw new Error(`Error sending password reset success email : ${err}`);
+  // throw new Error(`Error sending password reset success email : ${err}`);
+  return res.status(500).json({success:false,message:"Error sending password reset success email"});
 }
 }

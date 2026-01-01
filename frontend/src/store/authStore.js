@@ -31,11 +31,12 @@ export const userAuthStore = create((set) =>({
             set({user:response.data.userData,isAuthenticated:true,isLoading:false,error:null});
             console.log("Login response:",response.data);
             // return response.data;
+            // return response.data.message;
         }catch(error){
 
             console.error("Login error:",error.message);
             set({error:error.response.data?.message || "Error logging in",isLoading:false});
-            throw error;
+            // throw error;
         }
     },
     logout:async() => {
@@ -65,7 +66,7 @@ export const userAuthStore = create((set) =>({
         }
     },
     checkAuth: async () => {
-        // await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate a delay
+        await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate a delay
 
         // const { isCheckingAuth } = userAuthStore.getState();
         // console.log("isCheckingAuth in checkAuth:", isCheckingAuth);

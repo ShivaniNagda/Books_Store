@@ -10,12 +10,15 @@ import {sendWelcomeEmail,sendPasswordResetEmail} from "../mailTrap/emails.js";
 
 
 export const signup = async (req, res) => {
-    const { username, email, password } = req.body;
+    const { username, email, password, type } = req.body;
   try {
     if(!email || !password || !username) {
         throw new Error("All Field are required");
     }
-
+    console.log("type ",type);
+    if(type == "Admin"){
+      return res.status(400).json({success:false,message:"Cannot signup as Admin ."});
+    }
     const userAlreadyExist = await user.findOne({email});
     console.log("userAlreadyExist------------------------------ ",userAlreadyExist);
     if(userAlreadyExist){
@@ -28,6 +31,7 @@ export const signup = async (req, res) => {
         email,
         password:hashedPassword,
         username,
+        type,
         verificationToken,
         verificationExpireAt: Date.now() + 24 * 60 * 60 * 1000,
     });
@@ -39,6 +43,12 @@ export const signup = async (req, res) => {
     // JWT token
    await generateTokenAndSetCookie(res,userData._id);
    const sendVerificationEmailoutput = await sendVerificationEmail(userData.email,verificationToken);
+    console.log("sendVerificationEmailoutput ",sendVerificationEmailoutput);
+   if(!sendVerificationEmailoutput){
+      const userRemoved = await user.findByIdAndDelete(userData._id);
+      console.log("userRemoved ",userRemoved);
+    return res.status(500).json({success:false,message:"Please check email is invalid ."});
+   }
    console.log("sendVerificationEmailoutput ",sendVerificationEmailoutput);
    return res.status(201).json({success:true,message:"User created Successfully",userData:{...userData._doc,password:undefined}});
   } catch (error) {
