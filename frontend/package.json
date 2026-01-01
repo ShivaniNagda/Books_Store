@@ -1,5 +1,5 @@
 {
-  "name": "frontend",
+  "name": "Book_Store frontend",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -12,8 +12,10 @@
   "dependencies": {
     "@tailwindcss/vite": "^4.0.17",
     "axios": "^1.8.4",
+    "Book_Store": "file:..",
     "framer-motion": "^12.6.2",
     "lucide-react": "^0.485.0",
+    "mern_email_verification": "file:..",
     "motion": "^12.23.26",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
