@@ -8,10 +8,7 @@ import upload from "../middleware/multer.js"
 const bookRoutes = express.Router();
 
 bookRoutes.get("/",verifyToken,getBooks);
-bookRoutes.post("/",verifyToken,upload.fields([
-    { name: "image", maxCount: 1 },
-    { name: "pdf", maxCount: 1 },
-  ]), createBook);
+bookRoutes.post("/",verifyToken, createBook);
 bookRoutes.get("/:id",verifyToken,getBookById);
 bookRoutes.get("/author/:id",verifyToken,getBookByAuthorId);
 bookRoutes.get("/genre/:genre",verifyToken,getBooksByGenre);
