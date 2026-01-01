@@ -5,6 +5,7 @@ import Input from "../components/Input";
 import Select from "../components/Select";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import PasswordStrengthMeter from "../components/PasswordStrengthMeter";
+import {toast} from "react-hot-toast";
 
 
 import { userAuthStore } from "../store/authStore";
@@ -21,8 +22,12 @@ const SignUpPage = () => {
         e.preventDefault();
         try{
           console.log("SignUp data:",username,email,password);
-          await signup(email,password,username,role);
+         const result = await signup(email,password,username,role);
+         if(result){
           navigate("/verify-email");
+         }
+        //  toast.error("Please Check your email",1)
+        navigate("/signup");
         }catch(error){
           console.error("Signup error:",error);
         }

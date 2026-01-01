@@ -44,11 +44,11 @@ export const signup = async (req, res) => {
    await generateTokenAndSetCookie(res,userData._id);
    const sendVerificationEmailoutput = await sendVerificationEmail(userData.email,verificationToken);
     console.log("sendVerificationEmailoutput ",sendVerificationEmailoutput);
-   if(!sendVerificationEmailoutput){
-      const userRemoved = await user.findByIdAndDelete(userData._id);
-      console.log("userRemoved ",userRemoved);
-    return res.status(500).json({success:false,message:"Please check email is invalid ."});
-   }
+  //  if(!sendVerificationEmailoutput){
+  //     const userRemoved = await user.findByIdAndDelete(userData._id);
+  //     console.log("userRemoved ",userRemoved);
+  //   return res.status(500).json({success:false,message:"Please check email is invalid ."});
+  //  }
    console.log("sendVerificationEmailoutput ",sendVerificationEmailoutput);
    return res.status(201).json({success:true,message:"User created Successfully",userData:{...userData._doc,password:undefined}});
   } catch (error) {
