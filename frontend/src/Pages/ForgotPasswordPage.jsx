@@ -12,12 +12,13 @@ const ForgotPasswordPage = () => {
     const [isSubmitted,setIsSubmitted] = useState(false);
     const {isLoading,forgotPassword,error}= userAuthStore();
 
+    
     const handleSubmit = async (e) => {
         e.preventDefault();
         await forgotPassword(email);
         setIsSubmitted(true);
     }
-
+    
 
   return (
      <div className="flex items-center

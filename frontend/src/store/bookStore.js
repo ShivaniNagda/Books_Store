@@ -1,7 +1,7 @@
 import {create} from "zustand";
 import axios from "axios";
 
-const API_URL = "http://localhost:3000/api/book";
+const API_URL = import.meta.env.MODE === "development" ? "http://localhost:3000/api/book" : "/api/book";
 
 axios.defaults.withCredentials = true; // Enable sending cookies with requests
 export const useBookStore = create((set) =>({
