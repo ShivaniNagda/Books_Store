@@ -126,3 +126,8 @@ npm run dev
 - Profile Dashboard
 
 📌 Screenshots will be updated in upcoming commits as part of the enhancement phase.
+
+<!-- Admin -->
+Name : Admin
+Email: shivaninagda1997@gmail.com   
+Password: Password*90
