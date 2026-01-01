@@ -22,12 +22,12 @@ const message = await transporter
     category: "Integration Test",
   })
   console.log(message)
-  return true;
+  // return true;
 }catch(err){
   console.log("Error sending email");
   console.log(err.message);
   // throw new Error(`Error sending email : ${err}`);
-  return false;
-  // return res.status(500).json({success:false,message:"Error sending verification email"});
+  // return false;
+  return res.status(500).json({success:false,message:"Error sending verification email"});
 }
 }

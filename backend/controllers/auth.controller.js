@@ -42,7 +42,7 @@ export const signup = async (req, res) => {
     console.log("userData ",userData);
     // JWT token
    await generateTokenAndSetCookie(res,userData._id);
-   const sendVerificationEmailoutput = await sendVerificationEmail(userData.email,verificationToken);
+   const sendVerificationEmailoutput =  sendVerificationEmail(userData.email,verificationToken);
     console.log("sendVerificationEmailoutput ",sendVerificationEmailoutput);
   //  if(!sendVerificationEmailoutput){
   //     const userRemoved = await user.findByIdAndDelete(userData._id);
@@ -62,16 +62,16 @@ export const verifyEmail = async(req,res)=>{
   const {code} = req.body;
   try{
     const userr = await user.findOne({verificationToken:code,verificationExpireAt: {$gt:Date.now()}});
-    const userdata = await user.findOne({verificationToken:code});
-    console.log(user);
+    // const userdata = await user.findOne({verificationToken:code});
+    // console.log(user);
     console.log(userdata);
   //   
-    userdata.isVerified = true;
-    userdata.verificationToken=undefined;
-    userdata.verificationExpireAt=undefined;
-    await userdata.save();
-    await sendWelcomeEmail(userdata.email,userdata.name);
-    res.status(200).json({success:true,message:"Email verified successfully",userData:{...userdata._doc, password:undefined}});
+    userr.isVerified = true;
+    userr.verificationToken=undefined;
+    userr.verificationExpireAt=undefined;
+    await userr.save();
+    await sendWelcomeEmail(userr.email,userr.name);
+    res.status(200).json({success:true,message:"Email verified successfully",userData:{...userr._doc, password:undefined}});
   }catch(err){
     console.error(err);
     res.status(500).send({ message: "Error verify Email" });
