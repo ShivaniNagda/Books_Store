@@ -6,7 +6,7 @@ const BookList = () => {
   const {book:Book , deleteBook,rate , getBookById,getBookByAuthorId,getBooksByGenre,updateBook, getBooks} = useBookStore();
      useEffect(() => {
          getBooks();
-     },[getBooks]);
+     },[Book,getBooks,updateBook]);
  
     return (
     <motion.div className='bg-gray-800 shadow-lg rounded-lg overflow-hidden max-w-4xl mx-auto'
