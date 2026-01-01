@@ -17,13 +17,23 @@ const _dirname = path.resolve();
 console.log("_dirname ",_dirname);
 console.log("process.env.NODE_ENV ",process.env.NODE_ENV);
 
-app.use(
-  cors({
-    origin: "http://localhost:5173",
-    credentials: true,
-  })
-);
+// app.use(
+//   cors({
+//     origin: "http://localhost:5173",
+//     credentials: true,
+//   })
+// );
 // app.options("*", cors());
+// Source - https://stackoverflow.com/a
+// Posted by Michelle Tilley, modified by community. See post 'Timeline' for change history
+// Retrieved 2026-01-01, License - CC BY-SA 3.0
+
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "X-Requested-With");
+  next();
+});
+
 
 app.use(cookieParser());
 
