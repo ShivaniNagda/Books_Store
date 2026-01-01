@@ -13,9 +13,7 @@
     "@tailwindcss/vite": "^4.0.17",
     "axios": "^1.8.4",
     "framer-motion": "^12.6.2",
-    "frontendclient": "file:",
     "lucide-react": "^0.485.0",
-    "mern_email_verification": "file:..",
     "motion": "^12.23.26",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
@@ -35,6 +33,6 @@
     "globals": "^15.15.0",
     "postcss": "^8.5.3",
     "tailwindcss": "^3.4.17",
-    "vite": "^6.2.0"
+    "vite": "^7.3.0"
   }
 }
