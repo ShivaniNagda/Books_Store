@@ -24,14 +24,6 @@ app.use(
     credentials: true,
   })
 );
-// app.options("*", cors());
-
-
-// app.use(function(req, res, next) {
-//   res.header("Access-Control-Allow-Origin", "*");
-//   res.header("Access-Control-Allow-Headers", "X-Requested-With");
-//   next();
-// });
 
 
 
@@ -41,9 +33,9 @@ app.use(express.json({ limit: "20mb" }));
 app.use(express.urlencoded({ extended: true, limit: "20mb" }));
 
 app.use("/api/auth",authRoutes);
-// app.use(verifyToken,checkAuth);
 
-app.use("/api/book",bookRoutes);
+
+app.use("/api/book",verifyToken,bookRoutes);
 
 
 if(process.env.NODE_ENV === "production"){

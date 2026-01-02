@@ -13,13 +13,11 @@ export const sendVerificationEmail = async (email, verificationToken) => {
       html: VERIFICATION_EMAIL_TEMPLATE.replace(`{verificationCode}`,verificationToken),
       category:"Email Verification"
     });
-    // console.log("Email send successfully",response);
     console.log("Email send successfully");
   } catch (err) {
     console.error(`Error Sending verification`,err);
     throw new Error(`Error sending verification email: ${err}`);
-    // return res.status(500).json({success:false,message:"Error sending verification email"});
-  }
+    }
 };
 
 
@@ -40,7 +38,6 @@ export const sendWelcomeEmail= async(email,name)=>{
     
     console.log( "Error sending welcome email");
     console.log(err);
-    // return res.status(500).json({success:false,message:"Error sending Welcome Email"});
     throw new Error(`Error sending Welcome Email : ${err}`)
   }
 }
@@ -59,11 +56,9 @@ export const sendPasswordResetEmail = async(email,resetURL) =>{
       category: "Password Reset"
       });
       console.log("Password reset email sent successfully",response);
-      // res.status(200).json({success:true,message:"Password reset link sent to your email"});
       } catch (err) {
         console.error("Error sending password reset email", err);
         throw new Error(`Error sending password reset email: ${err}`);
-        // return res.status(500).json({success:false,message:"Error sending password reset email"});
         }
         
 }
@@ -84,6 +79,5 @@ export const sendResetSuccessEmail = async(email)=>{
   console.log("Error sending password reset success email");
   console.log(err);
   throw new Error(`Error sending password reset success email : ${err}`);
-  // return res.status(500).json({success:false,message:"Error sending password reset success email"});
 }
 }

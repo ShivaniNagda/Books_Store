@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 
+//----------- “Maintenance” phase ------------------
 
 export const cartSchema = new mongoose.Schema({
     bookId:{

@@ -44,16 +44,10 @@ export const signup = async (req, res) => {
    await generateTokenAndSetCookie(res,userData._id);
    const sendVerificationEmailoutput =  sendVerificationEmail(userData.email,verificationToken);
     console.log("sendVerificationEmailoutput ",sendVerificationEmailoutput);
-  //  if(!sendVerificationEmailoutput){
-  //     const userRemoved = await user.findByIdAndDelete(userData._id);
-  //     console.log("userRemoved ",userRemoved);
-  //   return res.status(500).json({success:false,message:"Please check email is invalid ."});
-  //  }
-   console.log("sendVerificationEmailoutput ",sendVerificationEmailoutput);
    return res.status(201).json({success:true,message:"User created Successfully",userData:{...userData._doc,password:undefined}});
   } catch (error) {
     console.error("error",error);
-   return res.status(500).send({ message: "Error creating user" });
+   return res.status(500).send({ message: "Error creating user " });
   }
 };
 // ------------------------------------------------------------------------
@@ -62,10 +56,7 @@ export const verifyEmail = async(req,res)=>{
   const {code} = req.body;
   try{
     const userr = await user.findOne({verificationToken:code,verificationExpireAt: {$gt:Date.now()}});
-    // const userdata = await user.findOne({verificationToken:code});
-    // console.log(user);
     console.log(userdata);
-  //   
     userr.isVerified = true;
     userr.verificationToken=undefined;
     userr.verificationExpireAt=undefined;
@@ -99,7 +90,7 @@ export const login = async (req, res) => {
     res.status(400).send({ message: "Error creating user" });
   }
 };
-// ----------------
+
 // --------------------------------------------------------
 export const logout = async (req, res) => {
   try {
@@ -136,7 +127,7 @@ export const forgotPassword = async (req,res) =>{
      return res.status(400).json({ success:false,message: "Something went wrong" });
     }
 }
-
+// --------------------------------------
 export const resetPassword = async(req,res) =>{
   console.log("resetPassword",req.body)
   try{
@@ -164,7 +155,7 @@ export const resetPassword = async(req,res) =>{
   }
 
 }
-
+// --------------------------------------
 export const checkAuth = async(req,res)=>{
   try{
     const userdata = await user.findById(req.userId).select("-password");

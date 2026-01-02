@@ -9,7 +9,6 @@ export const createBook = async (req, res) => {
     const { name, price, genre, description, inStock, image, pdf } =
       req.body.name;
     const author = req.userId;
-    // console.log("createBook req.body ", req.body);
     if (!name || !price || !genre || !description || !image) {
       return res
         .status(400)
@@ -29,7 +28,6 @@ export const createBook = async (req, res) => {
     }
     try {
       cloudniaryResponsepdf = await cloudinary.uploader.upload(pdf, {
-        //   resource_type: "raw",
         folder: "book_store_app",
       });
     } catch (error) {
@@ -73,6 +71,7 @@ export const createBook = async (req, res) => {
       .json({ success: false, message: "Internal server error" });
   }
 };
+// --------------------------------------
 export const getBooks = async (req, res) => {
   try {
     const userID = req.userId;
@@ -99,6 +98,7 @@ export const getBooks = async (req, res) => {
       .json({ success: false, message: "Internal server error" });
   }
 };
+// --------------------------------------
 export const getBookById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -116,7 +116,7 @@ export const getBookById = async (req, res) => {
       .json({ success: false, message: "Internal server error" });
   }
 };
-
+// --------------------------------------
 export const getBookByAuthorId = async (req, res) => {
   try {
     const { id } = req.params;
@@ -129,6 +129,7 @@ export const getBookByAuthorId = async (req, res) => {
       .json({ success: false, message: "Internal server error" });
   }
 };
+// --------------------------------------
 export const getBooksByGenre = async (req, res) => {
   try {
     const { genre } = req.params;
@@ -146,13 +147,13 @@ export const getBooksByGenre = async (req, res) => {
       .json({ success: false, message: "Internal server error" });
   }
 };
-
+// --------------------------------------
 export const updateBook = async (req, res) => {
   try {
     const { id } = req.params;
     const authorId = req.userId;
     const updates = req.body;
-    console.log("Author", authorId,updates);
+    console.log("Author", authorId, updates);
     const userData = await user.findById(authorId).select("type");
     console.log(userData);
     if (!userData) {
@@ -176,17 +177,16 @@ export const updateBook = async (req, res) => {
         .json({ success: false, message: "Book not found" });
     }
 
-    const bookfind = await BookModel.findOne({authorId: authorId, _id: id});
-    console.log(bookfind)
+    const bookfind = await BookModel.findOne({ authorId: authorId, _id: id });
+    console.log(bookfind);
 
     const updatedBook = await BookModel.findOneAndUpdate(
-       {authorId: authorId, _id: id} ,
-      {$set:updates},
-      {  new: true,
-  upsert: true }
+      { authorId: authorId, _id: id },
+      { $set: updates },
+      { new: true, upsert: true }
     );
-    
-    console.log("updatedBook" ,updatedBook);
+
+    console.log("updatedBook", updatedBook);
     if (!updatedBook) {
       return res
         .status(404)
@@ -204,83 +204,7 @@ export const updateBook = async (req, res) => {
       .json({ success: false, message: "Internal server error" });
   }
 };
-
-
-// export const updateBook = async (req, res) => {
-//   try {
-//     const { id } = req.params;
-//     const authorId = req.userId;
-
-//     // ✅ Only allow these fields to change
-//     const allowedFields = ["name", "price", "genre", "description"];
-//     const updates = {};
-//     console.log(req.body);
-//     allowedFields.forEach((field) => {
-//       console.log(field, " ", req.body[0]["field"]);
-//       if (req.body[field] !== undefined) {
-//         updates[field] = req.body[field];
-//         console.log(updates[field] , req.body[field])
-//       }
-//     });
-
-//     console.log("Update payload:", updates);
-
-//     if (Object.keys(updates).length === 0) {
-//       return res.status(400).json({
-//         success: false,
-//         message: "No valid fields provided for update",
-//       });
-//     }
-
-//     const userData = await user.findById(authorId).select("type");
-//     if (!userData) {
-//       return res.status(404).json({
-//         success: false,
-//         message: "User not found",
-//       });
-//     }
-
-//     if (!["Seller", "Admin"].includes(userData.type)) {
-//       return res.status(403).json({
-//         success: false,
-//         message: "Only sellers or admin can update books",
-//       });
-//     }
-
-//     const updatedBook =
-//       userData.type === "Admin"
-//         ? await BookModel.findByIdAndUpdate(
-//             id,
-//             { $set: updates },
-//             { new: true }
-//           )
-//         : await BookModel.findOneAndUpdate(
-//             { _id: id, authorId },
-//             { $set: updates },
-//             { new: true }
-//           );
-
-//     if (!updatedBook) {
-//       return res.status(404).json({
-//         success: false,
-//         message: "Book not found or not authorized",
-//       });
-//     }
-
-//     return res.status(200).json({
-//       success: true,
-//       message: "Book updated successfully",
-//       book: updatedBook,
-//     });
-//   } catch (error) {
-//     console.error("Error in updating book:", error);
-//     return res.status(500).json({
-//       success: false,
-//       message: "Internal server error",
-//     });
-//   }
-// };
-
+// --------------------------------------
 export const deleteBook = async (req, res) => {
   try {
     const { id } = req.params;
@@ -292,7 +216,6 @@ export const deleteBook = async (req, res) => {
         .status(404)
         .json({ success: false, message: "User not found" });
     }
-    console.log("isUser.type ", isUser.type);
     if (isUser.type == "Customer") {
       return res.status(403).json({
         success: false,
@@ -320,7 +243,7 @@ export const deleteBook = async (req, res) => {
       .json({ success: false, message: "Internal server error" });
   }
 };
-
+// --------------------------------------
 export const rate = async (req, res) => {
   try {
     const { bookId, rating, comment } = req.body;
