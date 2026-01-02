@@ -20,7 +20,7 @@ console.log("process.env.NODE_ENV ",process.env.NODE_ENV);
 
 app.use(
   cors({
-    origin: "http://localhost:5173" || "https://readify-2tfq.onrender.com" ,
+    origin: "http://localhost:5173" || "https://readify-2tfq.onrender.com" ||"http://localhost:3000" ,
     credentials: true,
   })
 );
