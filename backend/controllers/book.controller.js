@@ -148,7 +148,7 @@ export const getBooksByGenre = async (req, res) => {
   }
 };
 // --------------------------------------
-export const updateBook = async (req, res) => {
+export const updateBook = async (req, res,next) => {
   try {
     const { id } = req.params;
     const authorId = req.userId;

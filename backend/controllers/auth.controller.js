@@ -102,7 +102,7 @@ export const logout = async (req, res) => {
   }
 };
 // --------------------------------------
-export const forgotPassword = async (req,res) =>{
+export const forgotPassword = async (req,res,next) =>{
   try{
     const {email} = req.body;
     console.log("forgotPassword:backend",email);
@@ -121,7 +121,7 @@ export const forgotPassword = async (req,res) =>{
       console.log("userdata :",userdata, " email : ",email,`${process.env.CLIENT_URL}/reset-password/${resetToken}`);
       // send email
       await sendPasswordResetEmail(userdata.email,`${process.env.CLIENT_URL}/reset-password/${resetToken}`)
-     return res.status(200).json({success:true,message:"Password reset link sent to your email"});
+     return res.status(200).json({success:true,message:"Password reset link sent to your email",passwordResetLink:`${process.env.CLIENT_URL}/reset-password/${resetToken}`});
     }catch(err){
       console.error("Error from forgot password " ,err);
      return res.status(400).json({ success:false,message: "Something went wrong" });

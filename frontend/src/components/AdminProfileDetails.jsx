@@ -3,8 +3,6 @@ import { userAuthStore } from '../store/authStore';
 import { motion } from 'framer-motion'
 import ProfileRightContainer from './ProfileRightContainer';
 import { useBookStore } from '../store/bookStore';
-import BookItem from './BookItem';
-import ProfileData from './ProfileData';
 
 const AdminProfileDetails = () => {
 

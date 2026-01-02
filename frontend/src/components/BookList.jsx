@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Trash , Star } from 'lucide-react';
 import {useBookStore} from '../store/bookStore';
 const BookList = () => {
-  const {book:Book , deleteBook,loading , getBookById,getBookByAuthorId,getBooksByGenre,updateBook, getBooks} = useBookStore();
+  const {book:Book , deleteBook,loading , getBooks} = useBookStore();
      useEffect(() => {
          getBooks();
      },[]);
@@ -28,9 +28,11 @@ const BookList = () => {
               Genre
             </th>
           
-            {/* <th scope='col' className='px-6 py-3 text-left text-xs font uppercase text-gray-300 tracking-wider'>
+            {/*  -------- Maintenance--------
+            <th scope='col' className='px-6 py-3 text-left text-xs font uppercase text-gray-300 tracking-wider'>
               Featured
-            </th> */}
+            </th>
+             */}
           
             <th scope='col' className='px-6 py-3 text-left text-xs font uppercase text-gray-300 tracking-wider'>
               Actions
@@ -64,10 +66,12 @@ const BookList = () => {
               <td className='px-6 py-4 whitespace-nowrap '>
                     <div className='text-sm text-gray-300'>{book.genre}</div>
               </td>
-              {/* <td className='px-6 py-4 whitespace-nowrap '>
+              {/* -------- Maintenance--------
+              <td className='px-6 py-4 whitespace-nowrap '>
                     <button onClick={()=> toggleFeaturedProduct(book._id)} className={`p-1 rounded-full ${product.isFeatured ? "bg-yellow-400 text-gray-900" :"bg-gray-600 text-gray-300"} hover:bg-yellow-500 transition-colors duration-200`}>
                       <Star className='h-5 w-5' /> </button>
-              </td> */}
+              </td> 
+              */}
               <td className='px-6 py-4 whitespace-nowrap text-sm font-medium'>
                     <button onClick={()=> deleteBook(book._id)} className={`text-red-400 hover:text-red:300`}>
                       <Trash className='h-5 w-5' /> </button>
