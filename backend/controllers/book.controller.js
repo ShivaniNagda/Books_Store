@@ -28,7 +28,7 @@ export const createBook = async (req, res) => {
         .json({ success: false, message: "Error in uploading image" });
     }
     try {
-      cloudniaryResponsepdf =await cloudinary.uploader.upload(pdf, {
+      cloudniaryResponsepdf = await cloudinary.uploader.upload(pdf, {
         //   resource_type: "raw",
         folder: "book_store_app",
       });
@@ -58,13 +58,11 @@ export const createBook = async (req, res) => {
     console.log("newBook ", newBook);
     await newBook.save();
 
-    return res
-      .status(201)
-      .json({
-        success: true,
-        message: "Book created successfully",
-        book: newBook,
-      });
+    return res.status(201).json({
+      success: true,
+      message: "Book created successfully",
+      book: newBook,
+    });
   } catch (error) {
     if (error instanceof mongoose.Error.ValidationError) {
       return res.status(400).json({ success: false, message: error.message });
@@ -154,20 +152,21 @@ export const updateBook = async (req, res) => {
     const { id } = req.params;
     const authorId = req.userId;
     const updates = req.body;
-
-    const user = await user.findById(authorId).select("type");
-    if (!user) {
+    console.log("Author", authorId,updates);
+    const userData = await user.findById(authorId).select("type");
+    console.log(userData);
+    if (!userData) {
       return res
         .status(404)
         .json({ success: false, message: "User not found" });
     }
-    if (user.type !== "Seller" || user.type !== "Admin") {
-      return res
-        .status(403)
-        .json({
-          success: false,
-          message: "Only sellers or admin can update books",
-        });
+    const allowedRoles = ["Seller", "Admin"];
+
+    if (!allowedRoles.includes(userData.type)) {
+      return res.status(403).json({
+        success: false,
+        message: "Only sellers or admin can update books",
+      });
     }
 
     const exist = await BookModel.findOne({ authorId: authorId, _id: id });
@@ -177,24 +176,27 @@ export const updateBook = async (req, res) => {
         .json({ success: false, message: "Book not found" });
     }
 
-    const updatedBook = await BookModel.findByIdAndUpdate(
-      { authorId: authorId, _id: id },
-      updates,
-      { new: true }
-    );
+    const bookfind = await BookModel.findOne({authorId: authorId, _id: id});
+    console.log(bookfind)
 
+    const updatedBook = await BookModel.findOneAndUpdate(
+       {authorId: authorId, _id: id} ,
+      {$set:updates},
+      {  new: true,
+  upsert: true }
+    );
+    
+    console.log("updatedBook" ,updatedBook);
     if (!updatedBook) {
       return res
         .status(404)
         .json({ success: false, message: "Book not found" });
     }
-    return res
-      .status(200)
-      .json({
-        success: true,
-        message: "Book updated successfully",
-        book: updatedBook,
-      });
+    return res.status(200).json({
+      success: true,
+      message: "Book updated successfully",
+      book: updatedBook,
+    });
   } catch (error) {
     console.error("Error in updating book: ", error);
     return res
@@ -202,6 +204,83 @@ export const updateBook = async (req, res) => {
       .json({ success: false, message: "Internal server error" });
   }
 };
+
+
+// export const updateBook = async (req, res) => {
+//   try {
+//     const { id } = req.params;
+//     const authorId = req.userId;
+
+//     // ✅ Only allow these fields to change
+//     const allowedFields = ["name", "price", "genre", "description"];
+//     const updates = {};
+//     console.log(req.body);
+//     allowedFields.forEach((field) => {
+//       console.log(field, " ", req.body[0]["field"]);
+//       if (req.body[field] !== undefined) {
+//         updates[field] = req.body[field];
+//         console.log(updates[field] , req.body[field])
+//       }
+//     });
+
+//     console.log("Update payload:", updates);
+
+//     if (Object.keys(updates).length === 0) {
+//       return res.status(400).json({
+//         success: false,
+//         message: "No valid fields provided for update",
+//       });
+//     }
+
+//     const userData = await user.findById(authorId).select("type");
+//     if (!userData) {
+//       return res.status(404).json({
+//         success: false,
+//         message: "User not found",
+//       });
+//     }
+
+//     if (!["Seller", "Admin"].includes(userData.type)) {
+//       return res.status(403).json({
+//         success: false,
+//         message: "Only sellers or admin can update books",
+//       });
+//     }
+
+//     const updatedBook =
+//       userData.type === "Admin"
+//         ? await BookModel.findByIdAndUpdate(
+//             id,
+//             { $set: updates },
+//             { new: true }
+//           )
+//         : await BookModel.findOneAndUpdate(
+//             { _id: id, authorId },
+//             { $set: updates },
+//             { new: true }
+//           );
+
+//     if (!updatedBook) {
+//       return res.status(404).json({
+//         success: false,
+//         message: "Book not found or not authorized",
+//       });
+//     }
+
+//     return res.status(200).json({
+//       success: true,
+//       message: "Book updated successfully",
+//       book: updatedBook,
+//     });
+//   } catch (error) {
+//     console.error("Error in updating book:", error);
+//     return res.status(500).json({
+//       success: false,
+//       message: "Internal server error",
+//     });
+//   }
+// };
+
 export const deleteBook = async (req, res) => {
   try {
     const { id } = req.params;
@@ -215,12 +294,10 @@ export const deleteBook = async (req, res) => {
     }
     console.log("isUser.type ", isUser.type);
     if (isUser.type == "Customer") {
-      return res
-        .status(403)
-        .json({
-          success: false,
-          message: "Only sellers or admin can delete books",
-        });
+      return res.status(403).json({
+        success: false,
+        message: "Only sellers or admin can delete books",
+      });
     }
 
     const deletedBook = await BookModel.findByIdAndDelete({
@@ -250,12 +327,10 @@ export const rate = async (req, res) => {
     const authorId = req.userId;
 
     if (!bookId || !rating || !comment) {
-      return res
-        .status(400)
-        .json({
-          success: false,
-          message: "bookId, rating and comment are required",
-        });
+      return res.status(400).json({
+        success: false,
+        message: "bookId, rating and comment are required",
+      });
     }
     if (rating < 1 || rating > 5) {
       return res

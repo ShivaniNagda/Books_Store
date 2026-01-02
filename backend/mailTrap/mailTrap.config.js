@@ -4,14 +4,6 @@ import dotenv from "dotenv";
 dotenv.config();
 
 
-// mail trap.i0--------------------------------------------------------------------------
-// export const mailTrapclient = new MailtrapClient({ token: process.env.MAILTRAP_TOKEN,});
-
-// export const mailTrapsender = {
-//   email: "hello@demomailtrap.co",
-//   name: "Mailtrap Test",
-// };
-
 
 // -------------------------------Nodemailer
 export const transporter = nodemailer.createTransport({

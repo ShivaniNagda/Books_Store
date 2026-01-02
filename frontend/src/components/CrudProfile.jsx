@@ -4,11 +4,14 @@ import { BadgePlus, Target } from "lucide-react";
 import { useBookStore } from "../store/bookStore";
 import { useNavigate } from "react-router-dom";
 const CrudProfile = () => {
-  const { book ,getBooks} = useBookStore();
-  const navigate = useNavigate();
-   useEffect(() => {
-           getBooks();
-       },[]);
+
+ const { book, getBooks ,loading} = useBookStore();
+ const navigate = useNavigate();
+
+useEffect(() => {
+  getBooks();
+}, [getBooks]);
+
    
   return (
     <div

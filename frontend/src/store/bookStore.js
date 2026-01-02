@@ -1,15 +1,14 @@
 import {create} from "zustand";
 import axios from "axios";
 
+
 const API_URL = import.meta.env.MODE === "development" ? "http://localhost:3000/api/book" : "/api/book";
 
 axios.defaults.withCredentials = true; // Enable sending cookies with requests
-export const useBookStore = create((set) =>({
-    book:null,
-    isAuthenticated:false,
+export const useBookStore = create((set,get) =>({
+    book:[],
     error:null,
     loading:false,
-    isCheckingAuth:true,
     message:null,
     singleBook:null,
 
@@ -17,7 +16,8 @@ export const useBookStore = create((set) =>({
         set({loading:true,error:null});
         try{
             const response = await axios.post(`${API_URL}/`,{name, price, genre, description, inStock,image,pdf});
-            set({book:response.data.book,isAuthenticated:true,loading:false});
+            set({book:response.data.book,loading:false});
+            await get().getBooks();
             console.log("Create Book response:",response.data);
         }catch(error){
             console.error("Books error:",error.message);
@@ -29,7 +29,7 @@ export const useBookStore = create((set) =>({
         set({loading:true,error:null});
         try{
             const response = await axios.get(`${API_URL}`);
-            set({book:response.data.books,isAuthenticated:true,loading:false,error:null});
+            set({book:response.data.books,loading:false,error:null});
             console.log("getBooks response:",response.data.books);
             // return response.data;
         }catch(error){
@@ -44,7 +44,7 @@ export const useBookStore = create((set) =>({
         try{
             const response = await axios.get(`${API_URL}/${id}`);
             console.log("frontend logout : ",response);
-              set({singleBook:response.data.book,isAuthenticated:true,loading:false,error:null});
+              set({singleBook:response.data.book,loading:false,error:null});
             console.log("getBookById response:",response.data);
             // return response.data;
         }catch(error){
@@ -57,7 +57,7 @@ export const useBookStore = create((set) =>({
         try{
             const response = await axios.get(`${API_URL}/author/${id}`);
             console.log("getBookByAuthorId  : ",response);
-              set({book:response.data.books,isAuthenticated:true,loading:false,error:null});
+              set({book:response.data.books,loading:false,error:null});
             console.log("getBookByAuthorId response:",response.data);
             // return response.data;
         }catch(error){
@@ -70,7 +70,7 @@ export const useBookStore = create((set) =>({
         try{
             const response = await axios.get(`${API_URL}/genre/${genre}`);
             console.log("getBooksByGenre  : ",response);
-              set({book:response.data.books,isAuthenticated:true,loading:false,error:null});
+              set({book:response.data.books,loading:false,error:null});
             console.log("getBooksByGenre response:",response.data);
             // return response.data;
         }catch(error){
@@ -78,11 +78,13 @@ export const useBookStore = create((set) =>({
             set({error: "Error get Book By Genre Id ",loading:false});
             throw error;
         }},
-    updateBook :async({id,updates}) => {
+    updateBook :async(id,{ name, price, genre, description, inStock, image, pdf }) => {
         set({loading:true,error:null});
         try{
-            const response = await axios.put(`${API_URL}/${id}`,{updates});
-            set({user:response.data.book,isAuthenticated:true,loading:false});
+            // console.log("id", id, "update ",name, price, genre, description, inStock, image, pdf );
+            const response = await axios.put(`${API_URL}/${id}`,{name, price, genre, description, inStock, image, pdf });
+            set({user:response.data.book,loading:false});
+             await get().getBooks();
             console.log(" updateBook response:",response.data);
             return response.data.message;
         }catch(error){
@@ -95,17 +97,18 @@ export const useBookStore = create((set) =>({
     deleteBook: async (id) => {
     
 
-        set({isCheckingAuth: true, error: null, loading: true});
+        set({ error: null, loading: true});
         console.log("CheckAuth-fronten",id);
         
         try {
             const response = await axios.delete(`${API_URL}/${id}`);
             console.log("CheckAuth-fronten",response.data);
-            set({user: response.data.userData, isAuthenticated: true, isCheckingAuth: false,loading:false});
+            set({user: response.data.userData, loading:false});
+             await get().getBooks();
             return response.data.message;
         }catch (error) {
             console.error("Check auth error:", error);
-            set({error: null, isAuthenticated: false, isCheckingAuth: false , loading:false});
+            set({error: null, loading:false});
             return "Error deleting book";
         }
     },

@@ -3,10 +3,11 @@ import { motion } from 'framer-motion';
 import { Trash , Star } from 'lucide-react';
 import {useBookStore} from '../store/bookStore';
 const BookList = () => {
-  const {book:Book , deleteBook,rate , getBookById,getBookByAuthorId,getBooksByGenre,updateBook, getBooks} = useBookStore();
+  const {book:Book , deleteBook,loading , getBookById,getBookByAuthorId,getBooksByGenre,updateBook, getBooks} = useBookStore();
      useEffect(() => {
          getBooks();
-     },[Book,getBooks,updateBook]);
+     },[]);
+     
  
     return (
     <motion.div className='bg-gray-800 shadow-lg rounded-lg overflow-hidden max-w-4xl mx-auto'
@@ -38,7 +39,11 @@ const BookList = () => {
           </tr>
         </thead>
         <tbody className='bg-gray-800 divide-y divide-gray-700'>
-          {Book?.map((book)=>(
+          {loading ?( 
+            <>
+            <Loader className='mr-2 h-5 w-5 animate-spin' aria-hidden='true' />
+              Loading...
+            </>):(Book?.map((book)=>(
            
             <tr key={book._id} className='hover:bg-gray-700'>
               
@@ -68,7 +73,7 @@ const BookList = () => {
                       <Trash className='h-5 w-5' /> </button>
               </td>
             </tr>
-          ))}
+          )))}
 
         </tbody>
       </table>

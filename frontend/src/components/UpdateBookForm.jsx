@@ -19,6 +19,8 @@ const UpdateBookForm = () => {
     price: "",
     genre: "",
     description: "",
+    image: "",
+    pdf: "",
   });
 
   useEffect(() => {
@@ -28,6 +30,8 @@ const UpdateBookForm = () => {
         price: existingBook.price,
         genre: existingBook.genre,
         description: existingBook.description,
+        image:existingBook.image,
+        pdf:existingBook.pdf,
       });
     }
   }, [existingBook]);
@@ -38,7 +42,9 @@ const UpdateBookForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("updated before", id,formData);
     await updateBook(id, formData);
+    console.log("updated after", id,formData);
     navigate("/profile"); // go back to total books
   };
 
@@ -84,6 +90,45 @@ const UpdateBookForm = () => {
           placeholder="Description"
           className="w-full p-3 rounded bg-gray-700 text-white"
         />
+        <div className='mt-1 flex items-center overflow-hidden'>
+                <input type='file' id='image' className="sr-only" accept='image/*' value={book.image} disabled/>
+                  <label htmlFor='image' className="cursor-pointer bg-gray-700 py-2 px-3 border border-gray-600 rounded-md shadow-md text-sm leading-4 font-medium text-gray-300 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-emerald-500 hover:text-emerald-900">
+                    <Upload className='h-5 w-5 inline-block mr-2' />
+                    Upload Image
+                  </label>
+                  {book.image && <span className='ml-3 text-sm text-gray-400'>Image Uploaded</span>}
+                </div>
+              
+                
+                <div className="mt-1 flex items-center overflow-hidden">
+          <input
+            type="file"
+            id="pdf"
+            className="sr-only"
+            accept="application/pdf"
+            value={book.pdf} disabled
+          />
+        
+          <label
+            htmlFor="pdf"
+            className="
+              cursor-pointer bg-gray-700 py-2 px-3 border border-gray-600
+              rounded-md shadow-md text-sm font-medium text-gray-300
+              hover:bg-gray-300 hover:text-emerald-900
+              focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-emerald-500
+            "
+          >
+            <Upload className="h-5 w-5 inline-block mr-2" />
+            Upload Book
+          </label>
+        
+          {book.pdf && (
+            <span className="ml-3 text-sm text-gray-400">
+              PDF Uploaded
+            </span>
+          )}
+        </div>
+        
 
         <button
           type="submit"
