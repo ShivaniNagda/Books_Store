@@ -144,8 +144,8 @@ to avoid timeout issues.
 
 For testing the application, you can use the following predefined users:
 
-| Role     | Email              | Password |
-|----------|-------------------|----------|
-| Admin    | admin@gmail.com   | admin    |
+| Role     | Email              | Password          |
+|----------|-------------------|--------------------|
+| Admin    | admin@gmail.com   | admin@gmail.com    |
 | Seller   | seller@gmail.com  | seller   |
 | Customer | customer@gmail.com| customer |
