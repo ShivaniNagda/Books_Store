@@ -21,12 +21,6 @@ const UpdateBookForm = () => {
     image: null,
     pdf: null,
   })
-
-  // const [preview, setPreview] = useState({
-  //   image: "",
-  //   pdf: "",
-  // })
-
   useEffect(() => {
     if (existingBook) {
       setFormData({
@@ -39,11 +33,6 @@ const UpdateBookForm = () => {
         image:  existingBook.image,
         pdf: existingBook.pdf,
       })
-
-      // setPreview({
-      //   image: existingBook.image,
-      //   pdf: existingBook.pdf,
-      // })
     }
   }, [existingBook])
 
@@ -51,16 +40,16 @@ const UpdateBookForm = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
 
-  // ✅ LOGIC FIX ONLY
+
   const handleImageChange = (e) => {
     const file = e.target.files[0]
     console.log(file);
     if (!file) return
     setFormData((prev) => ({ ...prev, image: file }))
-    // setPreview((prev) => ({ ...prev, image: URL.createObjectURL(file) }))
+    
   }
 
-  // ✅ LOGIC FIX ONLY
+
   const handlePdfChange = (e) => {
     const file = e.target.files[0]
     if (!file) return
@@ -181,7 +170,7 @@ const UpdateBookForm = () => {
 
         <button
           type="submit"
-          className="w-full bg-gradient-to-r from-yellow-200 to-yellow-600 py-3 rounded font-semibold hover:bg-emerald-500"
+          className="w-full bg-yellow-600 text-white p-2 rounded flex justify-center"
         >
           {loading ? (
             <>

@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, Outlet } from "react-router-dom";
 import { motion } from "framer-motion";
-import { BadgePlus , Target} from "lucide-react";
+import { BadgePlus, Target } from "lucide-react";
 import UserDetail from "./UserDetail";
 import CrudProfile from "./CrudProfile";
 
@@ -16,15 +16,9 @@ const ProfileRightContainer = () => {
         p-2
       "
     >
-       {/* Right content */}
-      {/* <div className=" flex justify-center"> */}
-        <Outlet />
-      {/* </div> */}
-      {/* Sidebar */}
+      <Outlet />
+
       <CrudProfile />
-
-     
-
     </div>
   );
 };

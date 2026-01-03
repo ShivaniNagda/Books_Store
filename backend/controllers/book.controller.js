@@ -332,7 +332,7 @@ export const updateBook = async (req, res) => {
       );
       console.log("imageUpload",imageUpload);
       book.image = imageUpload.secure_url;
-       console.log("book.image",book.image);
+       console.log("book.pd",book.image);
     }
 
     // 5️⃣ Update PDF (if new PDF provided)
