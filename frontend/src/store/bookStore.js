@@ -14,19 +14,6 @@ export const useBookStore = create((set, get) => ({
   message: null,
   singleBook: null,
 
-  // createBook:async(name, price, genre, description, inStock,image,pdf) => {
-  //     set({loading:true,error:null});
-  //     try{
-  //         const response = await axios.post(`${API_URL}/`,{name, price, genre, description, inStock,image,pdf});
-  //         set({book:response.data.book,loading:false});
-  //         await get().getBooks();
-  //         console.log("Create Book response:",response.data);
-  //     }catch(error){
-  //         console.error("Books error:",error.message);
-  //         set({error:error.response.data.message || "Error Creating Book",loading:false});
-  //         throw error;
-  //     }
-  // },
 
   createBook: async (bookData) => {
     set({ loading: true, error: null });
@@ -42,11 +29,11 @@ export const useBookStore = create((set, get) => ({
       console.log("bookData.image ", bookData.image);
       formData.append("image", bookData.image);
       formData.append("pdf", bookData.pdf);
-      for (const pair of formData.entries()) {
-        console.log("FORMDATA:", pair[0], pair[1]);
-      }
+      // for (const pair of formData.entries()) {
+      //   console.log("FORMDATA:", pair[0], pair[1]);
+      // }
       const res = await axios.post(`${API_URL}/`, formData);
-      console.log(res);
+      // console.log(res);
       set({ book: res.data.book, loading: false });
       await get().getBooks();
 
@@ -118,37 +105,7 @@ export const useBookStore = create((set, get) => ({
       throw error;
     }
   },
-  // updateBook: async (
-  //   id,
-  //   { name, price, genre, description, inStock, image, pdf }
-  // ) => {
-  //   set({ loading: true, error: null });
-  //   try {
-  //     // console.log("id", id, "update ",name, price, genre, description, inStock, image, pdf );
-  //     const response = await axios.put(`${API_URL}/${id}`, {
-  //       name,
-  //       price,
-  //       genre,
-  //       description,
-  //       inStock,
-  //       image,
-  //       pdf,
-  //     });
-  //     set({ user: response.data.book, loading: false });
-  //     await get().getBooks();
-  //     console.log(" updateBook response:", response.data);
-  //     return response.data.message;
-  //   } catch (error) {
-  //     console.error("Verify updateBook error:", error.message);
-  //     set({
-  //       error: error.response?.data?.message || "Error updateBook ",
-  //       loading: false,
-  //     });
-  //     return "Error updateBook ";
-  //     // throw error;
-  //   }
-  // },
-
+  
 updateBook: async (bookData) => {
   set({ loading: true, error: null });
 
@@ -184,52 +141,6 @@ updateBook: async (bookData) => {
     throw error;
   }
 },
-
-//   updateBook: async ( bookData) => {
-//   set({ loading: true, error: null });
-
-//   try {
-//     const formData = new FormData();
-//     console.log(bookData);
-//     // Text fields
-//     if (bookData.name) formData.append("name", bookData.name);
-//     if (bookData.price) formData.append("price", bookData.price);
-//     if (bookData.genre) formData.append("genre", bookData.genre);
-//     if (bookData.description) formData.append("description", bookData.description);
-//     if (bookData.inStock) formData.append("inStock", bookData.inStock);
-
-//     // // 🔥 Files (ONLY if new file selected)
-//     // if (bookData.image instanceof File) {
-//       formData.append("image", bookData.image);
-//     // }
-
-//     // if (bookData.pdf instanceof File) {
-//       formData.append("pdf", bookData.pdf);
-//     // }
-
-//     // DEBUG (remove later)
-//     for (let pair of formData.entries()) {
-//       console.log("UPDATE FORM DATA:", pair[0], pair[1]);
-//     }
-   
-
-//     const response = await axios.put(`${API_URL}/${bookData.id}`, formData);
-
-//     set({ loading: false });
-//     await get().getBooks();
-
-//     return response.data.message;
-//   } catch (error) {
-//     console.error("updateBook error:", error);
-
-//     set({
-//       error: error.response?.data?.message || "Error updating book",
-//       loading: false,
-//     });
-
-//     throw error;
-//   }
-// },
 
   deleteBook: async (id) => {
     set({ error: null, loading: true });

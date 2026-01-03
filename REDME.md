@@ -140,5 +140,12 @@ Email functionality works in local/development environment.
 In production, an email API provider should be used instead of SMTP
 to avoid timeout issues.
 
+## Demo Credentials
 
+For testing the application, you can use the following predefined users:
 
+| Role     | Email              | Password |
+|----------|-------------------|----------|
+| Admin    | admin@gmail.com   | admin    |
+| Seller   | seller@gmail.com  | seller   |
+| Customer | customer@gmail.com| customer |

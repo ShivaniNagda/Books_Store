@@ -46,10 +46,10 @@ const ResetPasswordPage = () => {
     transition={{duration:0.5}}
     className='max-w-md w-full bg-gray-800 bg-opacity-50 backdrop-filter backdrop-blur-lg rounded-xl shadow-2xl border border-gray-700 mx-auto mt-10 p-8 overflow-hidden'>
     <div className='p-8'>
-        <h2 className='text-3xl font-bold mb-6 text-center bg-gradient-to-r from-green-400 to-emerald-500 text-transparent bg-clip-text'>Reset Password</h2>
+        <h2 className='text-3xl font-bold mb-6 text-center bg-gradient-to-r from-yellow-400 to-yellow-500 text-transparent bg-clip-text'>Reset Password</h2>
 
         {error && <p className='text-red-500 text-center mb-4'>{error}</p>}
-        {message && <p className='text-green-500 text-center mb-4'>{message}</p>}
+        {message && <p className='text-yellow-500 text-center mb-4'>{message}</p>}
 
 
     <form onSubmit={handleSubmit}>
@@ -60,7 +60,7 @@ const ResetPasswordPage = () => {
     type='submit'
     whileHover={{scale:1.05}}
     whileTap={{scale:0.95}}
-    className='bg-green-500 hover:bg-green-700 text-white font-bold py-2 rounded
+    className='bg-yelloq-500 hover:bg-yelloq-700 text-white font-bold py-2 rounded
     w-full mt-4 transition duration-200 ease-in-out'
     disabled={isLoading}
     >
@@ -69,7 +69,7 @@ const ResetPasswordPage = () => {
     </form>
     </div>
     <div className='px-8 py-4 bg-gray-900 bg-opacity-50 flex justify-center'>
-                <Link to={'/login'} className='text-sm text-green-400 hover:underline flex items-center'>
+                <Link to={'/login'} className='text-sm text-yellow-400 hover:underline flex items-center'>
                     <ArrowLeft className='h-4 w-4 mr-2' /> Back to Login
                 </Link>
              </div>
