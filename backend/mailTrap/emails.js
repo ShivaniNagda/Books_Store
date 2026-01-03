@@ -3,7 +3,7 @@ import {transporter } from "./mailTrap.config.js";
 
 
 export const sendVerificationEmail = async (email, verificationToken) => {
-  console.log("recipient",recipient);
+  console.log("recipient",email);
   try {
      await transporter.sendMail({
       from: process.env.MYEMAIL,
@@ -42,8 +42,7 @@ export const sendWelcomeEmail= async(email,name)=>{
 
 
 export const sendPasswordResetEmail = async(email,resetURL) =>{
-  console.log("recipient",email);
-  console.log("mailTrapsender",process.env.MYEMAIL,"recipient",recipient, "resetURL",resetURL);
+  
   try {
     const response = await transporter.sendMail({
       from: process.env.MYEMAIL,
@@ -62,7 +61,6 @@ export const sendPasswordResetEmail = async(email,resetURL) =>{
 }
 
 export const sendResetSuccessEmail = async(email)=>{
-  console.log("recipient",email);
   try{
     const response = await transporter.sendMail({
       from: process.env.MYEMAIL,

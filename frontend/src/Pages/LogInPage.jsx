@@ -20,10 +20,11 @@ const LogInPage = () => {
        console.log("Login message :",message);
        if(error){
         toast.error(error);
+        // toast.success("Logged in successfully");
         return;
        }
         navigate("/");
-        toast.success("Logged in successfully");
+        // toast.success("Logged in successfully");
     }
   return (
     <div className="flex items-center
