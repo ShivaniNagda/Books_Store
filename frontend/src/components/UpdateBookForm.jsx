@@ -1,52 +1,90 @@
 import { motion } from 'framer-motion'
-import { PlusCircle, Upload, Loader } from 'lucide-react';
-
-import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { useBookStore } from "../store/bookStore";
-
+import { PlusCircle, Upload, Loader } from 'lucide-react'
+import React, { useEffect, useState } from "react"
+import { useParams, useNavigate } from "react-router-dom"
+import { useBookStore } from "../store/bookStore"
 
 const UpdateBookForm = () => {
-  const { id } = useParams();
-  console.log("Updating book with ID:", id);
-  const navigate = useNavigate();
-  const { book, updateBook } = useBookStore();
+  const { id } = useParams()
+  const navigate = useNavigate()
+  const { book, updateBook, loading } = useBookStore()
 
-  const existingBook = book?.find((b) => b._id === id);
+  const existingBook = book?.find((b) => b._id === id)
 
   const [formData, setFormData] = useState({
+    id,
     name: "",
     price: "",
     genre: "",
     description: "",
-    image: "",
-    pdf: "",
-  });
+    inStock: "",
+    image: null,
+    pdf: null,
+  })
+
+  // const [preview, setPreview] = useState({
+  //   image: "",
+  //   pdf: "",
+  // })
 
   useEffect(() => {
     if (existingBook) {
       setFormData({
+        id: existingBook._id,
         name: existingBook.name,
         price: existingBook.price,
         genre: existingBook.genre,
         description: existingBook.description,
-        image:existingBook.image,
-        pdf:existingBook.pdf,
-      });
+        inStock: existingBook.inStock,
+        image:  existingBook.image,
+        pdf: existingBook.pdf,
+      })
+
+      // setPreview({
+      //   image: existingBook.image,
+      //   pdf: existingBook.pdf,
+      // })
     }
-  }, [existingBook]);
+  }, [existingBook])
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+    setFormData({ ...formData, [e.target.name]: e.target.value })
+  }
+
+  // ✅ LOGIC FIX ONLY
+  const handleImageChange = (e) => {
+    const file = e.target.files[0]
+    console.log(file);
+    if (!file) return
+    setFormData((prev) => ({ ...prev, image: file }))
+    // setPreview((prev) => ({ ...prev, image: URL.createObjectURL(file) }))
+  }
+
+  // ✅ LOGIC FIX ONLY
+  const handlePdfChange = (e) => {
+    const file = e.target.files[0]
+    if (!file) return
+
+    if (file.type !== "application/pdf") {
+      alert("Only PDF files are allowed")
+      return
+    }
+
+    if (file.size > 10 * 1024 * 1024) {
+      alert("PDF size must be less than 10MB")
+      return
+    }
+    console.log(file);
+    setFormData((prev) => ({ ...prev, pdf: file }))
+    // setPreview((prev) => ({ ...prev, pdf: file.name }))
+  }
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    console.log("updated before", id,formData);
-    await updateBook(id, formData);
-    console.log("updated after", id,formData);
-    navigate("/profile"); // go back to total books
-  };
+    e.preventDefault()
+    console.log("updated before", formData)
+    await updateBook(formData)
+    navigate("/profile")
+  }
 
   return (
     <motion.div
@@ -83,6 +121,14 @@ const UpdateBookForm = () => {
           className="w-full p-3 rounded bg-gray-700 text-white"
         />
 
+        <input
+          name="inStock"
+          value={formData.inStock}
+          onChange={handleChange}
+          placeholder="Quantity"
+          className="w-full p-3 rounded bg-gray-700 text-white"
+        />
+
         <textarea
           name="description"
           value={formData.description}
@@ -90,58 +136,67 @@ const UpdateBookForm = () => {
           placeholder="Description"
           className="w-full p-3 rounded bg-gray-700 text-white"
         />
+
+        {/* IMAGE – CSS SAME */}
         <div className='mt-1 flex items-center overflow-hidden'>
-                <input type='file' id='image' className="sr-only" accept='image/*' value={book.image} disabled/>
-                  <label htmlFor='image' className="cursor-pointer bg-gray-700 py-2 px-3 border border-gray-600 rounded-md shadow-md text-sm leading-4 font-medium text-gray-300 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-emerald-500 hover:text-emerald-900">
-                    <Upload className='h-5 w-5 inline-block mr-2' />
-                    Upload Image
-                  </label>
-                  {book.image && <span className='ml-3 text-sm text-gray-400'>Image Uploaded</span>}
-                </div>
-              
-                
-                <div className="mt-1 flex items-center overflow-hidden">
+          <input
+            type='file'
+            id='image'
+            className="sr-only"
+            accept='image/*'
+            onChange={handleImageChange}
+          />
+          <label
+            htmlFor='image'
+            className="cursor-pointer bg-gray-700 py-2 px-3 border border-gray-600 rounded-md shadow-md text-sm leading-4 font-medium text-gray-300 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-emerald-500 hover:text-emerald-900"
+          >
+            <Upload className='h-5 w-5 inline-block mr-2' />
+            Upload Image
+          </label>
+          {formData.image && (
+            <span className='ml-3 text-sm text-gray-400'>Image Selected</span>
+          )}
+        </div>
+
+        {/* PDF – CSS SAME */}
+        <div className="mt-1 flex items-center overflow-hidden">
           <input
             type="file"
             id="pdf"
             className="sr-only"
             accept="application/pdf"
-            value={book.pdf} disabled
+            onChange={handlePdfChange}
           />
-        
           <label
             htmlFor="pdf"
-            className="
-              cursor-pointer bg-gray-700 py-2 px-3 border border-gray-600
-              rounded-md shadow-md text-sm font-medium text-gray-300
-              hover:bg-gray-300 hover:text-emerald-900
-              focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-emerald-500
-            "
+            className="cursor-pointer bg-gray-700 py-2 px-3 border border-gray-600 rounded-md shadow-md text-sm font-medium text-gray-300 hover:bg-gray-300 hover:text-emerald-900 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-emerald-500"
           >
             <Upload className="h-5 w-5 inline-block mr-2" />
             Upload Book
           </label>
-        
-          {book.pdf && (
-            <span className="ml-3 text-sm text-gray-400">
-              PDF Uploaded
-            </span>
+          {formData.pdf && (
+            <span className="ml-3 text-sm text-gray-400">PDF Selected</span>
           )}
         </div>
-        
 
         <button
           type="submit"
           className="w-full bg-gradient-to-r from-yellow-200 to-yellow-600 py-3 rounded font-semibold hover:bg-emerald-500"
         >
-          Update Book
+          {loading ? (
+            <>
+              <Loader className="animate-spin mr-2" /> Loading
+            </>
+          ) : (
+            <>
+              <PlusCircle className='mr-2 h-5 w-5 inline-block' />
+              Update Book
+            </>
+          )}
         </button>
       </form>
     </motion.div>
-  );
-};
-
-
-
+  )
+}
 
 export default UpdateBookForm

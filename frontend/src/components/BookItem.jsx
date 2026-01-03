@@ -1,11 +1,18 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const BookItem = ({ book }) => {
+const BookItem = ({ book ,loading}) => {
+  
   console.log("Rendering BookItem for book:", book);
   return (
     <div className='relative overflow-hidden h-96 w-full group rounded-lg shadow-lg'>
-      <Link to={`/book/${book?._id}`}>
+     {loading ? (
+            <>
+              <Loader className="animate-spin mr-2" /> Loading
+            </>
+          ) : (  
+            <>
+          <Link to={`/book/${book?._id}`}>
         <div className='absolute inset-0 bg-gradient-to-b from-transparent to-gray-900 opacity-50 z-10' />
         <img
           src={book?.image}
@@ -20,6 +27,7 @@ const BookItem = ({ book }) => {
           </p>
         </div>
       </Link>
+      </>)}
     </div>
   );
 };

@@ -127,7 +127,18 @@ npm run dev
 
 📌 Screenshots will be updated in upcoming commits as part of the enhancement phase.
 
-<!-- Admin -->
-Name : Admin
-Email: shivaninagda1997@gmail.com   
-Password: Password*90
+## API Testing (Postman) : 
+ ### https://.postman.co/workspace/My-Workspace~005b80b3-16aa-4b39-8332-d5c665608e3d/collection/38914835-9321889f-a7f6-4363-8663-15eed2377c85?action=share&creator=38914835
+
+All APIs were tested locally using Postman.
+
+Base URL:
+http://localhost:3000
+
+Note:
+Email functionality works in local/development environment.
+In production, an email API provider should be used instead of SMTP
+to avoid timeout issues.
+
+
+

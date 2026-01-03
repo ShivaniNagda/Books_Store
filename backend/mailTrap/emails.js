@@ -3,13 +3,13 @@ import {transporter } from "./mailTrap.config.js";
 
 
 export const sendVerificationEmail = async (email, verificationToken) => {
-      const recipient = email ;
   console.log("recipient",recipient);
   try {
-    const response = await transporter.sendMail({
+     await transporter.sendMail({
       from: process.env.MYEMAIL,
-      to: recipient,
+      to: email,
       subject: "Verify your email",
+      text: `Your verification code is ${verificationToken}`,
       html: VERIFICATION_EMAIL_TEMPLATE.replace(`{verificationCode}`,verificationToken),
       category:"Email Verification"
     });
@@ -22,12 +22,10 @@ export const sendVerificationEmail = async (email, verificationToken) => {
 
 
 export const sendWelcomeEmail= async(email,name)=>{
-  const recipient = email ;
-  console.log("SendWelcomeEmail",email)
   try {
     const response = await transporter.sendMail({
       from: process.env.MYEMAIL,
-      to: recipient,
+      to: email,
       subject: "Welcome you have signup successfully",
       html: `welcome ${name ? name : "dear"}, you have signup successfully`,
       category: "Welcome",
@@ -44,13 +42,12 @@ export const sendWelcomeEmail= async(email,name)=>{
 
 
 export const sendPasswordResetEmail = async(email,resetURL) =>{
-  const recipient = email;
-  console.log("recipient",recipient);
+  console.log("recipient",email);
   console.log("mailTrapsender",process.env.MYEMAIL,"recipient",recipient, "resetURL",resetURL);
   try {
     const response = await transporter.sendMail({
       from: process.env.MYEMAIL,
-      to: recipient,
+      to: email,
       subject: "Reset your password",
       html: PASSWORD_RESET_REQUEST_TEMPLATE.replace("{resetURL}", resetURL),
       category: "Password Reset"
@@ -65,12 +62,11 @@ export const sendPasswordResetEmail = async(email,resetURL) =>{
 }
 
 export const sendResetSuccessEmail = async(email)=>{
-  const recipient =  email ;
-  console.log("recipient",recipient);
+  console.log("recipient",email);
   try{
     const response = await transporter.sendMail({
       from: process.env.MYEMAIL,
-      to: recipient,
+      to: email,
       subject:"Password Reset Successfully",
       html: PASSWORD_RESET_SUCCESS_TEMPLATE,
       category: "Password Reset",

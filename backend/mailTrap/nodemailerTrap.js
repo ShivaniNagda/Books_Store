@@ -6,15 +6,15 @@ import { transporter } from "./mailTrap.config.js";
 
 
 export const sendVerificationEmail = async (email, verificationToken) => {
-  console.log("SendVerificationEmail..Signup",email);
+  console.log("SendVerificationEmail..Signup",email,"process.env.MYEMAIL",process.env.MYEMAIL);
     const recipient = email;
 try{
 const message = await transporter
   .sendMail({
     from: process.env.MYEMAIL,
     to: recipient,
-    subject: "You are awesome!",
-    text: "Congrats for sending test email with Mailtrap!",
+    subject: "Verify your email address",
+    text: `Your verification code is ${verificationToken}`,
     html:VERIFICATION_EMAIL_TEMPLATE.replace(`{verificationCode}`,verificationToken),
     category: "Integration Test",
   })
@@ -23,6 +23,6 @@ const message = await transporter
 }catch(err){
   console.log("Error sending email");
   console.log(err.message);
-  throw new Error(`Error sending email : ${err}`);
+  throw new Error(`Error sending email : ${err.message}`);
 }
 }
