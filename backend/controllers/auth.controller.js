@@ -56,7 +56,7 @@ export const verifyEmail = async(req,res)=>{
   const {code} = req.body;
   try{
     const userr = await user.findOne({verificationToken:code,verificationExpireAt: {$gt:Date.now()}});
-    console.log(userdata);
+    console.log(userr);
     userr.isVerified = true;
     userr.verificationToken=undefined;
     userr.verificationExpireAt=undefined;
@@ -159,7 +159,6 @@ export const resetPassword = async(req,res) =>{
 export const checkAuth = async(req,res)=>{
   try{
     const userdata = await user.findById(req.userId).select("-password");
-    console.log("userdata",userdata);
     console.log("req.userId",req.userId);
     if(!userdata){
       return res.status(400).json({success:false,message:"User not found"});

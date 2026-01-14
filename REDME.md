@@ -149,3 +149,5 @@ For testing the application, you can use the following predefined users:
 | Admin    | admin@gmail.com   | admin    |
 | Seller   | seller@gmail.com  | seller   |
 | Customer | customer@gmail.com| customer |
+
+

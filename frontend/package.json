@@ -10,12 +10,15 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@langchain/core": "^1.1.9",
+    "@langchain/google-genai": "^2.1.4",
     "@tailwindcss/vite": "^4.0.17",
     "@vitejs/plugin-react": "^5.1.2",
     "autoprefixer": "^10.4.21",
     "axios": "^1.8.4",
     "Book_Store": "file:..",
     "framer-motion": "^12.6.2",
+    "langchain": "^1.2.4",
     "lucide-react": "^0.485.0",
     "motion": "^12.23.26",
     "postcss": "^8.5.3",

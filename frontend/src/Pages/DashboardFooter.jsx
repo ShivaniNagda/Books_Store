@@ -2,6 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { userAuthStore } from "../store/authStore";
 import { formatDate } from "../utils/date";
+import ChatBot from "../components/ChatBot";
 
 const DashboardFooter = () => {
   const user = userAuthStore((state) => state.user);
@@ -52,6 +53,7 @@ const DashboardFooter = () => {
           ? formatDate(user.lastLogin)
           : "You just signed up!"}
       </p>
+      <ChatBot />
     </motion.div>
   );
 };
