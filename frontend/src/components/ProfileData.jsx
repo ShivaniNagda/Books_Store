@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useBookStore } from '../store/bookStore';
 import { motion } from 'framer-motion';
-import { Trash, FilePenLine,Eye  } from 'lucide-react';
+import { Trash, FilePenLine,Eye , Download } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 
@@ -43,6 +43,8 @@ const ProfileData = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
     >
+      {/* Desktop Table */}
+<div className="hidden sm:block">
       <table className="min-w-full divide-y divide-gray-700">
         <thead className="bg-gray-800">
           <tr >
@@ -61,9 +63,9 @@ const ProfileData = () => {
             <th className="px-4 py-2 text-left text-[10px] sm:text-xs font-semibold uppercase text-gray-300">
               Edit
             </th>
-            {/* <th className="px-4 py-2 text-left text-[10px] sm:text-xs font-semibold uppercase text-gray-300">
+            <th className="px-4 py-2 text-left text-[10px] sm:text-xs font-semibold uppercase text-gray-300">
               View
-            </th> */}
+            </th>
           </tr>
         </thead>
 
@@ -118,18 +120,79 @@ const ProfileData = () => {
                   <FilePenLine  className="h-4 w-4 sm:h-5 sm:w-5" />
                 </button>
               </td>
-              {/* <td className="px-4 py-3">
-                <a href={book.pdf} target="_blank" rel="noreferrer"
+              <td className="px-4 py-3">
+                <a href={book.pdf} target="_blank" rel="noopener noreferrer"
                   // onClick={() => handleUpdate(book._id)}
                   className="text-red-400 hover:text-red-300 transition"
                 >
-                  <Eye   className="h-4 w-4 sm:h-5 sm:w-5" />
+                  <Download   className="h-4 w-4 sm:h-5 sm:w-5" />
                 </a>
-              </td> */}
+              </td>
             </tr>
           ))}
         </tbody>
       </table>
+      </div>
+      {/* Mobile Cards */}
+<div className="block sm:hidden space-y-4">
+  {Book && Book.map((book) => (
+    <div
+      key={book._id}
+      className="bg-gray-700 rounded-lg p-4"
+    >
+      <div className="flex gap-4">
+        {/* LEFT: Book Image */}
+        <img
+          src={book.image}
+          alt="book"
+          className="h-16 w-16 rounded-lg object-cover flex-shrink-0"
+        />
+
+        {/* RIGHT: Content */}
+        <div className="flex-1 space-y-1">
+          <p className="text-sm font-semibold text-white">
+            {book.name}
+          </p>
+
+          <p className="text-xs text-gray-300">
+            {book.genre}
+          </p>
+
+          <p className="text-xs text-gray-200 pt-1">
+            <span className="font-semibold">Price:</span> ₹{book.price.toFixed(2)}
+          </p>
+
+          {/* Actions */}
+          <div className="flex gap-4 pt-2">
+            <button
+              onClick={() => handleDelete(book._id)}
+              className="text-red-400"
+            >
+              <Trash className="h-5 w-5" />
+            </button>
+
+            <button
+              onClick={() => handleUpdate(book._id)}
+              className="text-blue-400"
+            >
+              <FilePenLine className="h-5 w-5" />
+            </button>
+
+            <a
+              href={book.pdf}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-green-400"
+            >
+              <Download className="h-5 w-5" />
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  ))}
+</div>
+
     </motion.div>
   );
 };

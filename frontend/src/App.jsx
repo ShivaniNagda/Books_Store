@@ -14,7 +14,7 @@ import Profile from "./Pages/Profile";
 import CreateBookForm from "./components/CreateBookForm";
 import ProfileData from "./components/ProfileData";
 import UpdateBookForm from "./components/UpdateBookForm";
-import BookReader from "./components/BookReader";
+import BookReader from "./pages/BookReader";
 
 // protect route that requires authentication
 const ProtectedRoute = ({ children }) => {

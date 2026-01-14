@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useBookStore } from "../store/bookStore";
 import Navbar from "../components/Navbar";
 import BookItem from "../components/BookItem";
+import Loader from "../components/Loader";
 
 const Dashboard = () => {
   const { book, loading, getBooks } = useBookStore();
@@ -19,7 +20,7 @@ const Dashboard = () => {
         {/* LOADING STATE */}
         {loading && (
           <p className="text-center text-gray-400 text-lg">
-            Loading books...
+            <Loader />
           </p>
         )}
 

@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import { motion } from 'framer-motion';
 import { Trash , Star } from 'lucide-react';
 import {useBookStore} from '../store/bookStore';
+import Loaderr from "../components/Loader"
 const BookList = () => {
   const {book:Book , deleteBook,loading , getBooks} = useBookStore();
      useEffect(() => {
@@ -40,7 +41,7 @@ const BookList = () => {
           {loading ?( 
             <>
             <Loader className='mr-2 h-5 w-5 animate-spin' aria-hidden='true' />
-              Loading...
+              <Loaderr />
             </>):(Book?.map((book)=>(
            
             <tr key={book._id} className='hover:bg-gray-700'>

@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
-import { PlusCircle, Upload, Loader } from "lucide-react";
+import { PlusCircle, Upload } from "lucide-react";
+import Loader from "./Loader";
 import React, { useState } from "react";
 import { useBookStore } from "../store/bookStore";
 import toast from "react-hot-toast";
@@ -162,7 +163,7 @@ const CreateBookForm = () => {
         >
           {loading ? (
             <>
-              <Loader className="animate-spin mr-2" /> Loading
+              <Loader className="animate-spin mr-2" /> 
             </>
           ) : (
             <>

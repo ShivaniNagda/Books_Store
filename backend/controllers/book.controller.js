@@ -106,7 +106,9 @@ console.log("Files:", req.files.pdf);
       `data:${pdfFile.mimetype};base64,${pdfFile.buffer.toString("base64")}`,
       {
         folder: "book_store/pdfs",
-        resource_type: "raw",
+        resource_type: "image",
+        type: "upload",
+        format: "pdf", 
       }
     );
 

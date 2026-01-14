@@ -4,8 +4,9 @@ import { useBookStore } from "../store/bookStore";
 import Navbar from "./Navbar";
 import {  Wrench } from "lucide-react";
 import { Link } from "react-router-dom";
+import Loader from "../components/Loader"
 
-const BookReader = () => {
+const Maintanance = () => {
   const { id } = useParams();
   const { singleBook, getBookById } = useBookStore();
 
@@ -14,7 +15,7 @@ const BookReader = () => {
   }, [id, getBookById]);
 
   if (!singleBook) {
-    return <p className="text-white text-center mt-10">Loading...</p>;
+    return <p className="text-white text-center mt-10"><Loader/> </p>;
   }
 
   return (
@@ -46,4 +47,4 @@ const BookReader = () => {
   );
 };
 
-export default BookReader;
+export default Maintanance;

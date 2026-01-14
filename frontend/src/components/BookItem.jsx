@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import Loaderr from './Loader';
 
 const BookItem = ({ book ,loading}) => {
   
@@ -8,7 +9,7 @@ const BookItem = ({ book ,loading}) => {
     <div className='relative overflow-hidden h-96 w-full group rounded-lg shadow-lg'>
      {loading ? (
             <>
-              <Loader className="animate-spin mr-2" /> Loading
+              <Loader className="animate-spin mr-2" /> <Loaderr />
             </>
           ) : (  
             <>
