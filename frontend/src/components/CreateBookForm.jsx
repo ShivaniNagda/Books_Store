@@ -1,9 +1,9 @@
-import { motion } from "framer-motion";
-import { PlusCircle, Upload } from "lucide-react";
-import Loader from "./Loader";
-import React, { useState } from "react";
-import { useBookStore } from "../store/bookStore";
-import toast from "react-hot-toast";
+import { motion } from "framer-motion"
+import { PlusCircle, Upload } from "lucide-react"
+import Loader from "./Loader"
+import React, { useState } from "react"
+import { useBookStore } from "../store/bookStore"
+import toast from "react-hot-toast"
 
 const genres = [
   "Fiction",
@@ -12,7 +12,7 @@ const genres = [
   "Mystery",
   "Fantasy",
   "Other",
-];
+]
 
 const CreateBookForm = () => {
   const [newBook, setNewBook] = useState({
@@ -21,19 +21,17 @@ const CreateBookForm = () => {
     description: "",
     inStock: "",
     genre: "",
-    image: null, 
-    pdf: null,   
-  });
+    image: null,
+    pdf: null,
+  })
 
-  const { createBook, loading } = useBookStore();
+  const { createBook, loading } = useBookStore()
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-
+    e.preventDefault()
     try {
-      await createBook(newBook);
-      toast.success("Book added successfully");
-
+      await createBook(newBook)
+      toast.success("Book added successfully")
       setNewBook({
         name: "",
         price: "",
@@ -42,58 +40,31 @@ const CreateBookForm = () => {
         genre: "",
         image: null,
         pdf: null,
-      });
-    } catch (error) {
-      toast.error("Something went wrong");
+      })
+    } catch {
+      toast.error("Something went wrong")
     }
-  };
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setNewBook({ ...newBook, image: file });
-    }
-  };
-
-  const handlePdfChange = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    if (file.type !== "application/pdf") {
-      toast.error("Only PDF files are allowed");
-      return;
-    }
-
-    if (file.size > 10 * 1024 * 1024) {
-      toast.error("PDF must be less than 10MB");
-      return;
-    }
-
-    setNewBook({ ...newBook, pdf: file });
-  };
+  }
 
   return (
     <motion.div
-      className="bg-gray-800 shadow-lg rounded-lg p-8 mb-8 w-full px-10 mx-auto"
+      className="w-full max-w-6xl mx-auto bg-gray-800 rounded-xl shadow-lg p-4 sm:p-6"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8 }}
     >
-      <h2 className="text-3xl font-semibold mb-6 text-center text-yellow-400">
+      <h2 className="text-2xl sm:text-3xl font-semibold mb-6 text-center bg-gradient-to-r from-yellow-200 to-yellow-500 bg-clip-text text-transparent">
         Create New Book
       </h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        {/* Name */}
+        {/* Book Name */}
         <input
           type="text"
           placeholder="Book Name"
           value={newBook.name}
-          onChange={(e) =>
-            setNewBook({ ...newBook, name: e.target.value })
-          }
+          onChange={(e) => setNewBook({ ...newBook, name: e.target.value })}
           required
-          className="w-full p-2 rounded bg-gray-700 text-white"
+          className="w-full p-3 rounded bg-gray-700 text-white text-sm sm:text-base focus:ring-2 focus:ring-yellow-500"
         />
 
         {/* Description */}
@@ -104,7 +75,8 @@ const CreateBookForm = () => {
             setNewBook({ ...newBook, description: e.target.value })
           }
           required
-          className="w-full p-2 rounded bg-gray-700 text-white"
+          rows={4}
+          className="w-full p-3 rounded bg-gray-700 text-white text-sm sm:text-base focus:ring-2 focus:ring-yellow-500"
         />
 
         {/* Price */}
@@ -112,14 +84,12 @@ const CreateBookForm = () => {
           type="number"
           placeholder="Price"
           value={newBook.price}
-          onChange={(e) =>
-            setNewBook({ ...newBook, price: e.target.value })
-          }
+          onChange={(e) => setNewBook({ ...newBook, price: e.target.value })}
           required
-          className="w-full p-2 rounded bg-gray-700 text-white"
+          className="w-full p-3 rounded bg-gray-700 text-white text-sm sm:text-base focus:ring-2 focus:ring-yellow-500"
         />
 
-        {/* Stock */}
+        {/* Quantity */}
         <input
           type="number"
           placeholder="Quantity"
@@ -128,17 +98,15 @@ const CreateBookForm = () => {
             setNewBook({ ...newBook, inStock: e.target.value })
           }
           required
-          className="w-full p-2 rounded bg-gray-700 text-white"
+          className="w-full p-3 rounded bg-gray-700 text-white text-sm sm:text-base focus:ring-2 focus:ring-yellow-500"
         />
 
         {/* Genre */}
         <select
           value={newBook.genre}
-          onChange={(e) =>
-            setNewBook({ ...newBook, genre: e.target.value })
-          }
+          onChange={(e) => setNewBook({ ...newBook, genre: e.target.value })}
           required
-          className="w-full p-2 rounded bg-gray-700 text-white"
+          className="w-full p-3 rounded bg-gray-700 text-white text-sm sm:text-base focus:ring-2 focus:ring-yellow-500"
         >
           <option value="">Select Genre</option>
           {genres.map((g) => (
@@ -148,32 +116,68 @@ const CreateBookForm = () => {
           ))}
         </select>
 
-        {/* Image */}
-        <input type="file" accept="image/*" onChange={handleImageChange} />
-        {newBook.image && <p className="text-sm text-gray-400">Image selected</p>}
+        {/* Image Upload */}
+        <div className="flex flex-col gap-2">
+          <input
+            type="file"
+            id="image"
+            className="sr-only"
+            accept="image/*"
+            onChange={(e) =>
+              setNewBook({ ...newBook, image: e.target.files[0] })
+            }
+          />
+          <label
+            htmlFor="image"
+            className="flex items-center justify-center gap-2 w-full bg-gray-700 py-3 rounded-md text-gray-300 hover:bg-gray-600 cursor-pointer"
+          >
+            <Upload className="h-5 w-5" />
+            Upload Image
+          </label>
+          {newBook.image && (
+            <span className="text-xs text-gray-400">Image selected</span>
+          )}
+        </div>
 
-        {/* PDF */}
-        <input type="file" accept="application/pdf" onChange={handlePdfChange} />
-        {newBook.pdf && <p className="text-sm text-gray-400">PDF selected</p>}
+        {/* PDF Upload */}
+        <div className="flex flex-col gap-2">
+          <input
+            type="file"
+            id="pdf"
+            className="sr-only"
+            accept="application/pdf"
+            onChange={(e) => setNewBook({ ...newBook, pdf: e.target.files[0] })}
+          />
+          <label
+            htmlFor="pdf"
+            className="flex items-center justify-center gap-2 w-full bg-gray-700 py-3 rounded-md text-gray-300 hover:bg-gray-600 cursor-pointer"
+          >
+            <Upload className="h-5 w-5" />
+            Upload Book PDF
+          </label>
+          {newBook.pdf && (
+            <span className="text-xs text-gray-400">PDF selected</span>
+          )}
+        </div>
 
+        {/* Submit */}
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-yellow-600 text-white p-2 rounded flex justify-center"
+          className="w-full bg-yellow-600 text-white py-3 rounded-lg flex items-center justify-center text-sm sm:text-base active:scale-95 transition"
         >
           {loading ? (
-            <>
-              <Loader className="animate-spin mr-2" /> 
-            </>
+            <Loader className="animate-spin" />
           ) : (
             <>
-              <PlusCircle className="mr-2" /> Create Book
+              <PlusCircle className="mr-2 h-5 w-5" />
+              Create Book
             </>
           )}
         </button>
       </form>
     </motion.div>
-  );
-};
+  )
+}
 
-export default CreateBookForm;
+export default CreateBookForm
