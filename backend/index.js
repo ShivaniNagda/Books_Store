@@ -38,7 +38,7 @@ app.use(cookieParser());
 
 app.use(express.json({ limit: "20mb" }));
 app.use(express.urlencoded({ extended: true, limit: "20mb" }));
-app.use("/api/docs", swagger.serve, swagger.setup(apiDocs));
+// app.use("/api/docs", swagger.serve, swagger.setup(apiDocs));
 
 app.use("/api/auth",authRoutes);
 
