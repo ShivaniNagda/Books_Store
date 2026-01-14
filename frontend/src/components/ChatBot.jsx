@@ -43,9 +43,10 @@ export default function ChatBot() {
         { from: "bot", text: res.data.reply },
       ]);
     } catch (error) {
+      // console.log(error.response.data.error);
       setMessages((prev) => [
         ...prev,
-        { from: "bot", text: "Server error. Please try again." },
+        { from: "bot", text:error.response.data.error },
       ]);
     } finally {
       setLoading(false);

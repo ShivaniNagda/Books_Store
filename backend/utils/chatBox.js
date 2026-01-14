@@ -3,6 +3,7 @@ import { DynamicStructuredTool } from "@langchain/core/tools";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
 import { RunnableSequence } from "@langchain/core/runnables";
 import { z } from "zod";
+import withTimeout from "./timeout.js"
 
 /* ================= PROMPT ================= */
 
@@ -81,7 +82,8 @@ const isSpecificBookQuery = (message = "") => {
     "summary of",
     "about book",
   ];
-
+  console.log("isSpecificQuery ",keywords.some(k =>
+    message.toLowerCase().includes(k)));
   return keywords.some(k =>
     message.toLowerCase().includes(k)
   );
@@ -89,37 +91,126 @@ const isSpecificBookQuery = (message = "") => {
 
 /* ================= CONTROLLER ================= */
 
-export const chatBox = async (req, res) => {
-  try {
-    const { message } = req.body;
-    console.log("message:", message);
+// export const chatBox = async (req, res) => {
+//   try {
+//     const { message } = req.body;
+//     console.log("message:", message);
 
-    // 1️⃣ CATEGORY / SUGGESTIONS / GENERAL QUESTIONS
-    if (!isSpecificBookQuery(message)) {
-      const response = await chatChain.invoke({ input: message });
-      return res.json({ reply: response.content });
+//     // 1️⃣ CATEGORY / SUGGESTIONS / GENERAL QUESTIONS
+//     if (!isSpecificBookQuery(message)) {
+//       console.log("inside if isSpecificBookQuery");
+//       const response = await chatChain.invoke({ input: message });
+//       console.log("inside if response",response);
+//       return res.json({ reply: response.content });
+//     }
+
+//     // 2️⃣ SPECIFIC BOOK DETAILS → TOOL CHAIN
+//     const response = await toolChain.invoke({ input: message });
+//    console.log("response:", response);
+//     if (Array.isArray(response.content)) {
+//       const toolCall = response.content.find(
+//         (c) => c.type === "functionCall"
+//       );
+
+//       if (toolCall?.functionCall?.name === "getBookDetails") {
+//         const result = await getBookDetailsTool.func(
+//           toolCall.functionCall.args
+//         );
+//         console.log("result : ",result);
+//         return res.json({ reply: result });
+//       }
+//     }
+//     console.log("response ",response);
+
+//     return res.json({ reply: response.content });
+
+//   } catch (error) {
+//      if (error.status === 429) {
+//     return {
+//       error: "AI limit reached. Please try again in a minute."
+//     }
+//     }else{
+//     console.error("AI Error:", error);
+//     res.status(500).json({ error: "AI error : Something went wrong. Please try again." });
+    
+//   }
+// }
+// }
+
+export const chatBox = async (req, res) => {
+  try { 
+    const { message } = req.body;
+
+    if (!message || !message.trim()) {
+      return res.status(400).json({
+        error: "Message is required",
+      });
     }
 
-    // 2️⃣ SPECIFIC BOOK DETAILS → TOOL CHAIN
-    const response = await toolChain.invoke({ input: message });
+    console.log("message:", message);
 
-    if (Array.isArray(response.content)) {
+    /* 1️⃣ GENERAL CHAT (NO TOOLS) */
+    if (!isSpecificBookQuery(message)) {
+      console.log("General chat flow");
+
+      const response = await withTimeout(
+        chatChain.invoke({ input: message }),
+        15000
+      );
+
+      return res.json({
+        reply: response?.content || "No response generated",
+      });
+    }
+
+    /* 2️⃣ TOOL-BASED BOOK QUERY */
+    console.log("Tool-based flow");
+
+    const response = await withTimeout(
+      toolChain.invoke({ input: message }),
+      15000
+    );
+
+    /* TOOL CALL HANDLING */
+    if (Array.isArray(response?.content)) {
       const toolCall = response.content.find(
-        (c) => c.type === "functionCall"
+        (c) => c?.type === "functionCall"
       );
 
       if (toolCall?.functionCall?.name === "getBookDetails") {
         const result = await getBookDetailsTool.func(
           toolCall.functionCall.args
         );
+
         return res.json({ reply: result });
       }
     }
 
-    return res.json({ reply: response.content });
+    /* FALLBACK */
+    return res.json({
+      reply: response?.content || "No response generated",
+    });
 
   } catch (error) {
     console.error("AI Error:", error);
-    res.status(500).json({ error: "AI error" });
+
+    /* ⏱ TIMEOUT */
+    if (error.message === "AI_TIMEOUT") {
+      return res.status(504).json({
+        error: "AI response timed out. Please try again shortly.",
+      });
+    }
+
+    /* 🚦 RATE LIMIT */
+    if (error.status === 429) {
+      return res.status(429).json({
+        error: "AI limit reached. Please wait and try again.",
+      });
+    }
+
+    /* ❌ UNKNOWN ERROR */
+    return res.status(500).json({
+      error: "AI error. Something went wrong. Please try again.",
+    });
   }
 };
