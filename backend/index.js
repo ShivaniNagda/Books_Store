@@ -15,7 +15,7 @@ import {chatBox} from "./utils/chatBox.js";
 
 
 
-import apiDocs from "./swagger.json" with {type:'json'};
+// import apiDocs from "./swagger.json" with {type:'json'};
 
 
 
